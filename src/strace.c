@@ -9,8 +9,6 @@
 */
 
 #include "strace.h"
-#include "syscall_x86_x64.h"
-#include "syscall_x86.h"
 
 /*
 ** 0f 05 syscall
@@ -27,55 +25,3 @@ int		is_syscall(short opcode)
   return (0);
 }
 
-int		check_call(t_ftrace *trace)
-{
-  struct user	infos;
-  short		opcode;
-  pid_t	pid;
-
-  pid = trace->pid;
-  opcode = 0;
-  if ((ptrace(PTRACE_GETREGS, pid, NULL, &infos) != -1)
-      && (!peek_proc_data(pid, (void*)(infos.regs.rip), &opcode, 1))
-      && (is_syscall(opcode)))
-    {
-//push calling function and continue and print into graph
-		//print -> search symbol in elf
-    }
-  return (0);
-}
-
-int	check_status(pid_t pid)
-{
-  int	status;
-
-  if (waitpid(pid, &status, WUNTRACED) == -1)
-    return (1);
-  if (WIFEXITED(status))
-    {
-      return (1);
-    }
-  else if (WIFSIGNALED(status))
-    {
-
-    }
-  return (0);
-}
-
-void	trace_pid(t_ftrace *trace)
-{
-  pid_t	pid;
-
-  pid = trace->pid;
-  trace->systable = trace->bit ? g_syscall_x86_x64 : g_syscall_x86;
-  trace->sizetable = (trace->bit ? sizeof(g_syscall_x86_x64)
-                      : sizeof(g_syscall_x86)) / sizeof(t_syscall_info);
-  while (!(check_status(pid)) && !(trace->quit))
-    {
-      if (!check_call(trace))
-        if (ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL) == -1)
-          perror("ptrace");
-    }
-  if (!trace->forked)
-    ptrace(PTRACE_DETACH, pid, NULL, NULL);
-}

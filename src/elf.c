@@ -49,3 +49,11 @@ int	init_elf(t_elf *elf, t_file *file)
   elf->sh_type = IS_32(&sh_type32, &sh_type64);
   return (0);
 }
+
+int	load_elf()
+{
+
+  return (0);
+}
+
+

@@ -8,7 +8,7 @@
 ** Last update Fri May  2 16:54:41 2014 Harold Fritsch
 */
 
-#include "strace.h"
+#include "ftrace.h"
 
 int	peek_proc_data(pid_t pid, void *addr, short *res, int verbose)
 {

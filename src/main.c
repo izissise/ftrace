@@ -8,7 +8,7 @@
 ** Last update Fri May  2 16:54:41 2014 Harold Fritsch
 */
 
-#include "strace.h"
+#include "ftrace.h"
 
 static int	*g_quit;
 
@@ -75,7 +75,6 @@ int		main(int ac, char **av, char **envp)
 {
   t_ftrace	trace;
 
-  trace.bit = 1;
   trace.pid = 0;
   trace.quit = 0;
   g_quit = &(trace.quit);

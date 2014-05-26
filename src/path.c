@@ -12,7 +12,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "strace.h"
+#include "ftrace.h"
 
 int			check_if_folder(char *file)
 {
