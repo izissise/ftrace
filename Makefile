@@ -16,13 +16,10 @@ SRC		=	main.c \
 			file.c \
 			liste.c \
 			liste_find.c \
-			node.c \
 			other_type_conversion.c \
 			param.c \
 			path.c \
 			peektext.c \
-			print.c \
-			ptr_tab.c \
 			section32.c \
 			section64.c \
 			section_search.c \

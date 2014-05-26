@@ -30,7 +30,6 @@ int		is_syscall(short opcode)
 int		check_call(t_ftrace *trace)
 {
   struct user	infos;
-  struct user	ret;
   short		opcode;
   pid_t	pid;
 
@@ -40,19 +39,8 @@ int		check_call(t_ftrace *trace)
       && (!peek_proc_data(pid, (void*)(infos.regs.rip), &opcode, 1))
       && (is_syscall(opcode)))
     {
-      print_syscall(&infos, trace);
-      if ((ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL) == -1)
-          || (check_status(pid)))
-        {
-          dprintf(STDERR_FILENO, " = ?\n");
-          return (1);
-        }
-      if (ptrace(PTRACE_GETREGS, pid, NULL, &ret) == -1)
-        {
-          dprintf(STDERR_FILENO, " = ?\n");
-          return (1);
-        }
-      print_syscall_ret(infos.regs.rax, &ret, trace);
+//push calling function and continue and print into graph
+		//print -> search symbol in elf
     }
   return (0);
 }
