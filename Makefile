@@ -9,15 +9,13 @@
 ##
 
 SRC		=	main.c \
-			binary_type.c \
 			dereference.c \
 			elf.c \
 			endianess.c \
 			file.c \
 			liste.c \
 			liste_find.c \
-			other_type_conversion.c \
-			param.c \
+			ftrace.c \
 			path.c \
 			peektext.c \
 			section32.c \
@@ -28,9 +26,6 @@ SRC		=	main.c \
 			strace.c \
 			symbol32.c \
 			symbol64.c \
-			symbol_type32.c \
-			symbol_type64.c \
-			type_conversion.c
 
 CC		=	gcc
 FILETYPE	=	.c

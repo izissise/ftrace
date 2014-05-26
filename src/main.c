@@ -43,7 +43,7 @@ pid_t	ptrace_exec(char *program, char **av, char **envp, t_ftrace *trace)
         }
       exit(1);
     }
-  trace->bit = is_64_bit_path(path);
+
   free(path);
   trace->forked = 1;
   return (child);
@@ -51,6 +51,8 @@ pid_t	ptrace_exec(char *program, char **av, char **envp, t_ftrace *trace)
 
 pid_t	ptrace_attach(pid_t pid, t_ftrace *trace)
 {
+  char	path[512];
+
   if ((pid <= 0) || (kill(pid, 0) == -1))
     {
       if (pid <= 0)
@@ -63,7 +65,8 @@ pid_t	ptrace_attach(pid_t pid, t_ftrace *trace)
       perror("ptrace");
       return (-1);
     }
-  trace->bit = is_64_bit_pid(pid);
+
+  snprintf(path, sizeof(path), "/proc/%lu/exe", (long int)pid);
   trace->forked = 0;
   return (pid);
 }
