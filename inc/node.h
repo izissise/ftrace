@@ -19,4 +19,9 @@ struct		s_node
   struct s_node	**tab;
 };
 
+void	free_node(void *ptr);
+void	link_node(t_node *n1, t_node *n2);
+int	linked(t_node *n1, t_node *n2);
+t_node	*create_node(void *data);
+
 #endif /* !NODE_H_INCLUDED */

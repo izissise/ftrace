@@ -8,7 +8,33 @@
 ## Last update Sat Mar 22 23:04:53 2014 Hugues
 ##
 
-SRC		=	main.c
+SRC		=	main.c \
+			binary_type.c \
+			dereference.c \
+			elf.c \
+			endianess.c \
+			file.c \
+			liste.c \
+			liste_find.c \
+			node.c \
+			other_type_conversion.c \
+			param.c \
+			path.c \
+			peektext.c \
+			print.c \
+			ptr_tab.c \
+			section32.c \
+			section64.c \
+			section_search.c \
+			section_spec32.c \
+			section_spec64.c \
+			special_syscall.c \
+			strace.c \
+			symbol32.c \
+			symbol64.c \
+			symbol_type32.c \
+			symbol_type64.c \
+			type_conversion.c
 
 CC		=	gcc
 FILETYPE	=	.c
