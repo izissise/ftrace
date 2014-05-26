@@ -27,7 +27,7 @@ int		is_syscall(short opcode)
   return (0);
 }
 
-int		check_syscall(t_strace *trace)
+int		check_call(t_ftrace *trace)
 {
   struct user	infos;
   struct user	ret;
@@ -75,7 +75,7 @@ int	check_status(pid_t pid)
   return (0);
 }
 
-void	trace_pid(t_strace *trace)
+void	trace_pid(t_ftrace *trace)
 {
   pid_t	pid;
 
@@ -85,7 +85,7 @@ void	trace_pid(t_strace *trace)
                       : sizeof(g_syscall_x86)) / sizeof(t_syscall_info);
   while (!(check_status(pid)) && !(trace->quit))
     {
-      if (!check_syscall(trace))
+      if (!check_call(trace))
         if (ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL) == -1)
           perror("ptrace");
     }

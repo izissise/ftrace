@@ -37,7 +37,7 @@ void	print_spec_syscall_param(long long int reg, t_special_print *flags,
     }
 }
 
-void	print_write_byte(char *argtmp, void *ptr, int size, t_strace *trace)
+void	print_write_byte(char *argtmp, void *ptr, int size, t_ftrace *trace)
 {
   char	str[60];
   int	i;
@@ -66,7 +66,7 @@ void	print_write_byte(char *argtmp, void *ptr, int size, t_strace *trace)
 }
 
 int			handle_special_syscalls(struct user *infos, t_syscall_info *sys,
-                                int arg, t_strace *trace)
+                                int arg, t_ftrace *trace)
 {
   char			*argtmp;
   long long int	reg;

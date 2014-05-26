@@ -13,6 +13,8 @@
 
 # include <stdlib.h>
 
+# include "tab.h"
+
 typedef struct s_node	t_node;
 
 struct		s_node

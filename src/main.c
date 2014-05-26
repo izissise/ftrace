@@ -20,7 +20,7 @@ void	sig_handler(int sig)
     }
 }
 
-pid_t	ptrace_exec(char *program, char **av, char **envp, t_strace *trace)
+pid_t	ptrace_exec(char *program, char **av, char **envp, t_ftrace *trace)
 {
   pid_t	child;
   char	*path;
@@ -49,7 +49,7 @@ pid_t	ptrace_exec(char *program, char **av, char **envp, t_strace *trace)
   return (child);
 }
 
-pid_t	ptrace_attach(pid_t pid, t_strace *trace)
+pid_t	ptrace_attach(pid_t pid, t_ftrace *trace)
 {
   if ((pid <= 0) || (kill(pid, 0) == -1))
     {
@@ -70,7 +70,7 @@ pid_t	ptrace_attach(pid_t pid, t_strace *trace)
 
 int		main(int ac, char **av, char **envp)
 {
-  t_strace	trace;
+  t_ftrace	trace;
 
   trace.bit = 1;
   trace.pid = 0;

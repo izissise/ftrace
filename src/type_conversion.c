@@ -11,18 +11,18 @@
 #include "strace.h"
 
 void	trace_int(long long int reg, char res[BUFSIZ],
-                UNSEDP t_strace *trace)
+                UNSEDP t_ftrace *trace)
 {
   snprintf(res, BUFSIZ, "%ld", (long int)reg);
 }
 
 void	trace_uint(long long int reg, char res[BUFSIZ],
-                 UNSEDP t_strace *trace)
+                 UNSEDP t_ftrace *trace)
 {
   snprintf(res, BUFSIZ, "%lu", (unsigned long int)reg);
 }
 
-void	trace_chartoile(long long int reg, char res[BUFSIZ], t_strace *trace)
+void	trace_chartoile(long long int reg, char res[BUFSIZ], t_ftrace *trace)
 {
   char	str[60];
   int	i;
@@ -49,7 +49,7 @@ void	trace_chartoile(long long int reg, char res[BUFSIZ], t_strace *trace)
 }
 
 void	trace_ptrtoile(long long int reg, char res[BUFSIZ],
-                     UNSEDP t_strace *trace)
+                     UNSEDP t_ftrace *trace)
 {
   snprintf(res, BUFSIZ, "0x%lx", (long int)reg);
 }

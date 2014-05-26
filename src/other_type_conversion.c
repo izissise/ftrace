@@ -16,13 +16,13 @@
 #include "strace.h"
 
 void	trace_void(UNSEDP long long int reg, char res[BUFSIZ],
-                 UNSEDP t_strace *trace)
+                 UNSEDP t_ftrace *trace)
 {
   snprintf(res, BUFSIZ, "?");
 }
 
 void	trace_chartoiletoile(long long int reg, char res[BUFSIZ],
-                           t_strace *trace)
+                           t_ftrace *trace)
 {
   char	*ptr;
   int	j;
@@ -36,7 +36,7 @@ void	trace_chartoiletoile(long long int reg, char res[BUFSIZ],
 }
 
 void			trace_ststat(long long int reg,
-                       char res[BUFSIZ], t_strace *trace)
+                       char res[BUFSIZ], t_ftrace *trace)
 {
   struct stat	st;
 
