@@ -8,7 +8,7 @@
 ** Last update Mon Oct  8 16:20:21 2012 hugues morisset
 */
 
-#include "general.h"
+#include "symbols.h"
 
 int		find_section_type(t_elf *elf, uint32_t type,
                         int start, t_file *file)

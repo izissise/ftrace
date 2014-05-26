@@ -8,7 +8,7 @@
 ** Last update Mon Oct  8 16:20:21 2012 hugues morisset
 */
 
-#include "general.h"
+#include "symbols.h"
 
 int			check_valid_elf(t_file *file)
 {
@@ -42,12 +42,10 @@ int	init_elf(t_elf *elf, t_file *file)
   elf->section_number = IS_32(&section_number32, &section_number64);
   elf->symbols_str = IS_32(&symbols_str_32, &symbols_str_64);
   elf->symbol_name = IS_32(&symbol_name32, &symbol_name64);
-  elf->dump_symbol = IS_32(&dump_symbol32, &dump_symbol64);
   elf->sh_offset = IS_32(&sh_offset32, &sh_offset64);
   elf->sh_size = IS_32(&sh_size32, &sh_size64);
   elf->sh_addr = IS_32(&sh_addr32, &sh_addr64);
   elf->sh_section_name = IS_32(&sh_section_name32, &sh_section_name64);
-  elf->print_elf_info = IS_32(&print_elf_info32, &print_elf_info64);
   elf->sh_type = IS_32(&sh_type32, &sh_type64);
   return (0);
 }

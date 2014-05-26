@@ -8,7 +8,7 @@
 ** Last update Mon Oct  8 16:20:21 2012 hugues morisset
 */
 
-#include "general.h"
+#include "symbols.h"
 
 size_t		sh_offset32(Elf32_Ehdr *elf, int idx, t_file *file)
 {

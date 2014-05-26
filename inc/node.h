@@ -11,6 +11,8 @@
 #ifndef NODE_H_INCLUDED
 # define NODE_H_INCLUDED
 
+# include <stdlib.h>
+
 typedef struct s_node	t_node;
 
 struct		s_node
