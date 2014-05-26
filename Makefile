@@ -25,7 +25,6 @@ SRC		=	main.c \
 			section_search.c \
 			section_spec32.c \
 			section_spec64.c \
-			special_syscall.c \
 			strace.c \
 			symbol32.c \
 			symbol64.c \
