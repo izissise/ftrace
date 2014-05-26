@@ -89,6 +89,6 @@ void	trace_pid(t_strace *trace)
         if (ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL) == -1)
           perror("ptrace");
     }
-  if (trace->forked)
+  if (!trace->forked)
     ptrace(PTRACE_DETACH, pid, NULL, NULL);
 }
