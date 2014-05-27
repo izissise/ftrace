@@ -9,6 +9,7 @@
 */
 
 #include "symbols.h"
+#include "ftrace.h"
 
 int			check_valid_elf(t_file *file)
 {
@@ -50,10 +51,12 @@ int	init_elf(t_elf *elf, t_file *file)
   return (0);
 }
 
-int	load_elf()
+int	load_elf(char *path, t_ftrace *trace)
 {
-
+  if ((open_file(&(trace->file), path, O_RDONLY, 0) == -1)
+      || check_valid_elf(&(trace->file))
+      || init_elf(&(trace->elf), &(trace->file)))
+    return (1);
+  trace->elf.elf = trace->file.data;
   return (0);
 }
-
-

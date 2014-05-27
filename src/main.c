@@ -43,7 +43,8 @@ pid_t	ptrace_exec(char *program, char **av, char **envp, t_ftrace *trace)
         }
       exit(1);
     }
-
+  if (load_elf(path, trace))
+    return (-1);
   free(path);
   trace->forked = 1;
   return (child);
@@ -65,8 +66,9 @@ pid_t	ptrace_attach(pid_t pid, t_ftrace *trace)
       perror("ptrace");
       return (-1);
     }
-
   snprintf(path, sizeof(path), "/proc/%lu/exe", (long int)pid);
+  if (load_elf(path, trace))
+    return (-1);
   trace->forked = 0;
   return (pid);
 }
@@ -75,8 +77,7 @@ int		main(int ac, char **av, char **envp)
 {
   t_ftrace	trace;
 
-  trace.pid = 0;
-  trace.quit = 0;
+  memset(&trace, 0, sizeof(t_ftrace));
   g_quit = &(trace.quit);
   if ((ac == 3) && (!strcmp("-p", av[1])))
     trace.pid = ptrace_attach(atol(av[2]), &trace);
@@ -92,5 +93,6 @@ int		main(int ac, char **av, char **envp)
     }
   else
     return (1);
+  close_file(&(trace.file));
   return (0);
 }

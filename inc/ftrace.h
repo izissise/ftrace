@@ -33,6 +33,7 @@ typedef struct		s_ftrace
 {
   pid_t			pid;
   t_elf			elf;
+  t_file			file;
   int			forked;
   int			quit;
   int			sizetable;
@@ -45,5 +46,6 @@ int	peek_proc_data(pid_t pid, void *addr, short *res, int verbose);
 int	peek_proc_data_size(pid_t pid, void *addr, char *res, int size);
 int	check_status(pid_t pid);
 void	*switch_endian(void *var, int varsize);
+int	load_elf(char *path, t_ftrace *trace);
 
 #endif /* !FTRACE_H_INCLUDED */

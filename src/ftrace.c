@@ -26,6 +26,7 @@ int		check_call(t_ftrace *trace)
     {
 //push calling function and continue and print into graph
 		//print -> search symbol in elf
+		//go see nm/display_info to how to do that
     }
   return (0);
 }
