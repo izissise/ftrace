@@ -15,18 +15,20 @@
 int		check_call(t_ftrace *trace)
 {
   struct user	infos;
-  short		opcode;
+  char		opcode[sizeof(void*)];
+  void		*call;
   pid_t	pid;
 
   pid = trace->pid;
   opcode = 0;
   if ((ptrace(PTRACE_GETREGS, pid, NULL, &infos) != -1)
-      && (!peek_proc_data(pid, (void*)(infos.regs.rip), &opcode, 1))
-      && (is_syscall(opcode)))
+      && (!peek_proc_data_size(pid, (void*)(infos.regs.rip),
+                               &opcode, sizeof(opcode)))
+      && ((is_syscall(opcode) || (call = retrieve_opcode(opcode)))))
     {
 //push calling function and continue and print into graph
-		//print -> search symbol in elf
-		//go see nm/display_info to how to do that
+      //print -> search symbol in elf
+      //go see nm/display_info to how to do that
     }
   return (0);
 }

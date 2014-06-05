@@ -17,6 +17,8 @@ SRC		=	main.c \
 			liste_find.c \
 			ftrace.c \
 			path.c \
+			call.c \
+			ptr_tab.c \
 			peektext.c \
 			section32.c \
 			section64.c \
