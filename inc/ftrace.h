@@ -48,4 +48,8 @@ int	check_status(pid_t pid);
 void	*switch_endian(void *var, int varsize);
 int	load_elf(char *path, t_ftrace *trace);
 
+int	is_ret_opcode(unsigned short opcode);
+int	is_call_opcode(unsigned short opcode);
+void	*calc_call(void *opcode);
+
 #endif /* !FTRACE_H_INCLUDED */

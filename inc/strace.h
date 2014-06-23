@@ -20,6 +20,6 @@ typedef struct	s_syscall_info
   char		*args[9];
 }		t_syscall_info;
 
-int	is_syscall(short opcode);
+int	is_syscall(unsigned short opcode);
 
 #endif /* !STRACE_H_INCLUDED */

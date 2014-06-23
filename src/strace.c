@@ -16,11 +16,11 @@
 ** cd 80 int 0x80
 */
 
-int		is_syscall(short opcode)
+int		is_syscall(unsigned short opcode)
 {
-  if (!(opcode ^ 0x050f)
-      || !(opcode ^ 0x340f)
-      || !(opcode ^ 0x80cd))
+  if (!(opcode ^ 0x050fU)
+      || !(opcode ^ 0x340fU)
+      || !(opcode ^ 0x80cdU))
     return (1);
   return (0);
 }

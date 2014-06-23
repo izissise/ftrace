@@ -10,13 +10,21 @@
 
 #include "ftrace.h"
 
-void	*retrieve_opcode(void *addr)
+int	is_call_opcode(unsigned short opcode)
 {
 
+  return (0);
+}
+
+int	is_ret_opcode(unsigned short opcode)
+{
+
+  return (0);
 }
 
 void	*calc_call(void *opcode)
 {
 
+  return (NULL);
 }
 
