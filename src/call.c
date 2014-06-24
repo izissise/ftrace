@@ -16,9 +16,16 @@ int	is_call_opcode(unsigned short opcode)
   return (0);
 }
 
+/*
+** c3 xx ret       (cdecl)
+** c2 xx xx ret X  (stdcall)
+*/
+
 int	is_ret_opcode(unsigned short opcode)
 {
-
+  if (!((opcode & 0xff00U) ^ 0xc300U)
+      || !((opcode & 0xff00U) ^ 0xc200U))
+    return (1);
   return (0);
 }
 

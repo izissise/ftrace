@@ -12,12 +12,12 @@
 #include "syscall_x86_x64.h"
 #include "syscall_x86.h"
 
-int		check_call(t_ftrace *trace)
+int			check_call(t_ftrace *trace)
 {
-  struct user	infos;
-  short		opcode;
-  void		*call;
-  pid_t	pid;
+  struct user		infos;
+  unsigned short	opcode;
+  void			*call;
+  pid_t		pid;
 
   pid = trace->pid;
   opcode = 0;
