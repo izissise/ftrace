@@ -23,8 +23,7 @@ int			check_call(t_ftrace *trace)
   opcode = 0;
   call = NULL;
   if ((ptrace(PTRACE_GETREGS, pid, NULL, &infos) != -1)
-      && (!peek_proc_data_size(pid, (void*)(infos.regs.rip),
-                               (char*)&opcode, sizeof(opcode))))
+      && (!peek_proc_data(pid, (void*)(infos.regs.rip), (short*)&opcode, 1)))
     {
       if (is_syscall(opcode))
         {
@@ -32,14 +31,15 @@ int			check_call(t_ftrace *trace)
         }
       else if (is_call_opcode(opcode))
         {
-        	printf("call %x\n", opcode);
+          call = calc_call(opcode, &infos, pid);
+          printf("call %p\n", call);
           //push calling function and continue and print into graph
           //print -> search symbol in elf
           //go see nm/display_info to how to do that
         }
       else if (is_ret_opcode(opcode))
         {
-        	printf("ret %x\n", opcode);
+          printf("ret %x\n", opcode);
           //pop function
         }
     }

@@ -17,7 +17,7 @@
 ** ff /3 Xx call
 */
 
-int	is_call_opcode(unsigned short opcode)
+inline int	is_call_opcode(unsigned short opcode)
 {
   if (!((opcode & 0xff00U) ^ 0xe800U)
       || !((opcode & 0xff00U) ^ 0x9a00U))
@@ -38,7 +38,7 @@ int	is_call_opcode(unsigned short opcode)
 ** ca ** ** ret X (far call)
 */
 
-int	is_ret_opcode(unsigned short opcode)
+inline int	is_ret_opcode(unsigned short opcode)
 {
   if (!((opcode & 0xff00U) ^ 0xc300U)
       || !((opcode & 0xff00U) ^ 0xc200U)
@@ -48,9 +48,18 @@ int	is_ret_opcode(unsigned short opcode)
   return (0);
 }
 
-void	*calc_call(void *opcode)
+void	*calc_call(unsigned short opcode, struct user *infos, pid_t pid)
 {
+  char	instr[12];
+  void	*res;
 
-  return (NULL);
+  res = NULL;
+  if (peek_proc_data_size(pid, (void*)(infos->regs.rip), instr, sizeof(instr)))
+    return (NULL);
+  if (!((opcode & 0xff00U) ^ 0xe800U))
+  {
+    res = *((void**)(&instr[1]));
+    res = (void*)((size_t)res >> 32);
+  }
+  return (res);
 }
-

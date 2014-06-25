@@ -10,7 +10,8 @@
 
 #include "ftrace.h"
 
-int	peek_proc_data(pid_t pid, void *addr, short *res, int verbose)
+inline int	peek_proc_data(pid_t pid, void *addr,
+                           short *res, int verbose)
 {
   errno = 0;
   if ((((*res) = ptrace(PTRACE_PEEKTEXT, pid, addr, NULL)) == -1)
@@ -23,15 +24,15 @@ int	peek_proc_data(pid_t pid, void *addr, short *res, int verbose)
   return (0);
 }
 
-int	peek_proc_data_size(pid_t pid, void *addr, char *res, int size)
+inline int	peek_proc_data_size(pid_t pid, void *addr, char *res, int size)
 {
-  int	i;
+  int		i;
   short	tmp;
 
   i = 0;
   while (i < size)
     {
-      if (peek_proc_data(pid, addr + i, (short*)(&tmp), 0))
+      if (peek_proc_data(pid, addr + i, &tmp, 0))
         return (1);
       res[i] = tmp;
       i++;
