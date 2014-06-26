@@ -57,8 +57,6 @@ void	*calc_call(unsigned short opcode, struct user *infos, pid_t pid)
   if (peek_proc_data_size(pid, (void*)(infos->regs.rip), instr, sizeof(instr)))
     return (NULL);
   if (!((opcode & 0x00ffU) ^ 0x00e8U))
-    {
-      res = (void*)(*((size_t*)(&instr[1])));
-    }
+    res = (void*)((size_t)(infos->regs.rip) + ((*((int*)(&instr[1]))) + 5));
   return (res);
 }
