@@ -32,14 +32,14 @@ int			check_call(t_ftrace *trace)
       else if (is_call_opcode(opcode))
         {
           call = calc_call(opcode, &infos, pid);
-          printf("call %p\n", call);
+          printf("call %p %x %p\n", (void*)(infos.regs.rip),  opcode & 0xffU, call);
           //push calling function and continue and print into graph
           //print -> search symbol in elf
           //go see nm/display_info to how to do that
         }
       else if (is_ret_opcode(opcode))
         {
-          printf("ret %x\n", opcode);
+          printf("ret %p %x\n", (void*)(infos.regs.rip), opcode & 0xffU);
           //pop function
         }
     }

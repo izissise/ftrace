@@ -19,13 +19,13 @@
 
 inline int	is_call_opcode(unsigned short opcode)
 {
-  if (!((opcode & 0xff00U) ^ 0xe800U)
-      || !((opcode & 0xff00U) ^ 0x9a00U))
+  if (!((opcode & 0x00ffU) ^ 0x00e8U)
+      || !((opcode & 0x00ffU) ^ 0x009aU))
     return (1);
-  if (!((opcode & 0xff00U) ^ 0xff00U))
+  if (!((opcode & 0x00ffU) ^ 0x00ffU))
     {
-      if (!(((opcode & 0x00ffU) >> 6) ^ 0x2)
-          || !(((opcode & 0x00ffU) >> 6) ^ 0x3))
+      if (!((((opcode & 0xff00U) >> 8) >> 6) ^ 0x2)
+          || !((((opcode & 0xff00U) >> 8) >> 6) ^ 0x3))
         return (1);
     }
   return (0);
@@ -40,10 +40,10 @@ inline int	is_call_opcode(unsigned short opcode)
 
 inline int	is_ret_opcode(unsigned short opcode)
 {
-  if (!((opcode & 0xff00U) ^ 0xc300U)
-      || !((opcode & 0xff00U) ^ 0xc200U)
-      || !((opcode & 0xff00U) ^ 0xcb00U)
-      || !((opcode & 0xff00U) ^ 0xca00U))
+  if (!((opcode & 0x00ffU) ^ 0x00c3U)
+      || !((opcode & 0x00ffU) ^ 0x00c2U)
+      || !((opcode & 0x00ffU) ^ 0x00cbU)
+      || !((opcode & 0x00ffU) ^ 0x00caU))
     return (1);
   return (0);
 }
@@ -56,10 +56,9 @@ void	*calc_call(unsigned short opcode, struct user *infos, pid_t pid)
   res = NULL;
   if (peek_proc_data_size(pid, (void*)(infos->regs.rip), instr, sizeof(instr)))
     return (NULL);
-  if (!((opcode & 0xff00U) ^ 0xe800U))
-  {
-    res = *((void**)(&instr[1]));
-    res = (void*)((size_t)res >> 32);
-  }
+  if (!((opcode & 0x00ffU) ^ 0x00e8U))
+    {
+      res = (void*)(*((size_t*)(&instr[1])));
+    }
   return (res);
 }
