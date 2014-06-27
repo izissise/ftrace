@@ -18,10 +18,12 @@ int			check_call(t_ftrace *trace)
   unsigned short	opcode;
   void			*call;
   pid_t		pid;
+  t_func		func;
 
   pid = trace->pid;
   opcode = 0;
   call = NULL;
+  memset(&func, 0, sizeof(t_func));
   if ((ptrace(PTRACE_GETREGS, pid, NULL, &infos) != -1)
       && (!peek_proc_data(pid, (void*)(infos.regs.rip), (short*)&opcode, 1)))
     {
@@ -32,14 +34,21 @@ int			check_call(t_ftrace *trace)
       else if (is_call_opcode(opcode))
         {
           call = calc_call(opcode, &infos, pid);
-          printf("call %p %x %p\n", (void*)(infos.regs.rip),  opcode & 0xffU, call);
-          //push calling function and continue and print into graph
-          //print -> search symbol in elf
-          //go see nm/display_info to how to do that
+          // printf("call %p %x %p\n", (void*)(infos.regs.rip),  opcode & 0xffU, call);
+          if (call)
+            {
+              func_info(&func, call, trace);
+              printf("call %s_%p@%s\n", func.name, func.addr, func.binary_name);
+              //push calling function and continue and prřint into graph
+              //print -> search symbol in elf
+              //go see nm/display_info to how to do that
+              free_info(&func);
+            }
         }
       else if (is_ret_opcode(opcode))
         {
-          printf("ret %p %x\n", (void*)(infos.regs.rip), opcode & 0xffU);
+          printf("ret\n");
+          // printf("ret %p %x\n", (void*)(infos.regs.rip), opcode & 0xffU);
           //pop function
         }
     }
@@ -55,10 +64,6 @@ int	check_status(pid_t pid)
   if (WIFEXITED(status))
     {
       return (1);
-    }
-  else if (WIFSIGNALED(status))
-    {
-
     }
   return (0);
 }

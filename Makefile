@@ -28,6 +28,7 @@ SRC		=	main.c \
 			strace.c \
 			symbol32.c \
 			symbol64.c \
+			func_name.c
 
 CC		=	gcc
 FILETYPE	=	.c

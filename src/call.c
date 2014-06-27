@@ -58,5 +58,7 @@ void	*calc_call(unsigned short opcode, struct user *infos, pid_t pid)
     return (NULL);
   if (!((opcode & 0x00ffU) ^ 0x00e8U))
     res = (void*)((size_t)(infos->regs.rip) + ((*((int*)(&instr[1]))) + 5));
+  else if (!((opcode & 0x00ffU) ^ 0x00ffU))
+    res = (void*)((size_t)(0U) + ((*((int*)(&instr[2]))) + 5));
   return (res);
 }

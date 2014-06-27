@@ -26,6 +26,7 @@
 # include "strace.h"
 # include "file.h"
 # include "symbols.h"
+# include "call.h"
 
 # define UNSEDP __attribute__((unused))
 
