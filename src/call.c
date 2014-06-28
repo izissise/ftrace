@@ -39,10 +39,15 @@ inline int	is_call_opcode(unsigned short opcode)
 ** c2 xx xx ret X  (stdcall)
 ** cb xx ret (far call)
 ** ca ** ** ret X (far call)
+** f2 rep prefix
+** f3 rep prefix
 */
 
 inline int	is_ret_opcode(unsigned short opcode)
 {
+  if (!((opcode & 0x00ffU) ^ 0x00f2U)
+      || !((opcode & 0x00ffU) ^ 0x00f3U))
+    opcode >>= 8;
   if (!((opcode & 0x00ffU) ^ 0x00c3U)
       || !((opcode & 0x00ffU) ^ 0x00c2U)
       || !((opcode & 0x00ffU) ^ 0x00cbU)
