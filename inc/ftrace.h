@@ -55,4 +55,6 @@ inline int	is_ret_opcode(unsigned short opcode);
 inline int	is_call_opcode(unsigned short opcode);
 void	*calc_call(unsigned short opcode, struct user *infos, pid_t pid);
 
+uint64_t	three_bit_register(struct user *infos, uint8_t tbit, int extended);
+
 #endif /* !FTRACE_H_INCLUDED */

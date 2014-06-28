@@ -21,9 +21,9 @@ void	func_info(t_func *func, void *addr, t_ftrace *trace)
   free(func->name);
   symbol = find_symbols_by_addr(&trace->elf, trace->symbols_list,
                                 addr, &trace->file);
+  func->binary_name = strdup(trace->file.name);
   if (symbol == -1)
     {
-      func->binary_name = strdup("a.out");
       func->name = strdup("func");
       return ;
     }

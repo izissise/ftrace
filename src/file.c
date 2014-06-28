@@ -30,7 +30,7 @@ int	open_file(t_file *file, const char *name, int flags, mode_t mode)
 
   file->data = NULL;
   file->mode = mode;
-  file->name = name;
+  file->name = strdup(name);
   file->flags = flags;
   mapright = ((flags == O_RDONLY) ? PROT_READ : (flags == O_WRONLY) ?
               PROT_WRITE : (flags == O_RDWR) ? PROT_WRITE | PROT_READ : 0);
@@ -68,5 +68,6 @@ int	close_file(t_file *file)
       perror(file->name);
       ret = -1;
     }
+  free(file->name);
   return (ret);
 }

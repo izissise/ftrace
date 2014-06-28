@@ -1,0 +1,40 @@
+graph
+check elf bound
+
+
+different type of calls:
+x86-64:
+   0:   ff d0                   callq  *%rax
+   2:   ff d3                   callq  *%rbx
+   4:   ff d1                   callq  *%rcx
+   6:   ff d2                   callq  *%rdx
+   8:   ff d4                   callq  *%rsp
+   a:   ff d5                   callq  *%rbp
+   c:   ff d7                   callq  *%rdi
+   e:   ff d6                   callq  *%rsi
+  10:   41 ff d0                callq  *%r8
+  10:   41 ff d1                callq  *%r9
+  13:   41 ff d2                callq  *%r10
+  16:   41 ff d3                callq  *%r11
+  19:   41 ff d4                callq  *%r12
+  1c:   41 ff d5                callq  *%r13
+  1f:   41 ff d6                callq  *%r14
+  22:   41 ff d7                callq  *%r15
+  25:   e8 12 00 00 00          callq  0x3c
+  2a:   e8 eb be ad de          callq  0xffffffffdeadbf1a
+  2f:   e8 a3 0b 30 a7          callq  0xffffffffa7300bd7
+i386:
+   0:   ff d0                   call   *%eax
+   2:   ff d3                   call   *%ebx
+   4:   ff d1                   call   *%ecx
+   6:   ff d2                   call   *%edx
+   8:   ff d4                   call   *%esp
+   a:   ff d5                   call   *%ebp
+   c:   ff d7                   call   *%edi
+   e:   ff d6                   call   *%esi
+  10:   e8 12 00 00 00          call   0x27
+  15:   e8 eb be ad de          call   0xdeadbf05
+  1a:   e8 a3 0b 30 a7          call   0xa7300bc2
+  1f:   9a dd dd dd dd 11 11    lcall  $0x1111,$0xdddddddd
+  26:   9a 01 00 00 00 01 00    lcall  $0x1,$0x1
+

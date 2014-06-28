@@ -12,6 +12,8 @@
 # define FILE_H_INCLUDED
 
 # include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <unistd.h>
@@ -23,7 +25,7 @@ typedef struct	s_file
   int		fd;
   int		flags;
   mode_t	mode;
-  char const	*name;
+  char		*name;
   size_t	size;
   void		*data;
 }		t_file;

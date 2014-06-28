@@ -39,9 +39,9 @@ int			check_call(t_ftrace *trace)
             {
               func_info(&func, call, trace);
               printf("call %s_%p@%s\n", func.name, func.addr, func.binary_name);
-              //push calling function and continue and prřint into graph
               //print -> search symbol in elf
               //go see nm/display_info to how to do that
+              //push calling function and continue and prřint into graph
               free_info(&func);
             }
         }

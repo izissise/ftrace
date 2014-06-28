@@ -19,13 +19,16 @@
 
 inline int	is_call_opcode(unsigned short opcode)
 {
+  uint8_t	modbyte;
+
   if (!((opcode & 0x00ffU) ^ 0x00e8U)
       || !((opcode & 0x00ffU) ^ 0x009aU))
     return (1);
   if (!((opcode & 0x00ffU) ^ 0x00ffU))
     {
-      if (!((((opcode & 0xff00U) >> 8) >> 6) ^ 0x2)
-          || !((((opcode & 0xff00U) >> 8) >> 6) ^ 0x3))
+      modbyte = ((opcode & 0xff00U) >> 8);
+      if (!(((modbyte >> 3) & 0x7U) ^ 0x2U)
+          || !(((modbyte >> 3) & 0x7U) ^ 0x3U))
         return (1);
     }
   return (0);
@@ -50,15 +53,21 @@ inline int	is_ret_opcode(unsigned short opcode)
 
 void	*calc_call(unsigned short opcode, struct user *infos, pid_t pid)
 {
-  char	instr[12];
+  char	instr[10];
   void	*res;
+  uint8_t	modbyte;
 
   res = NULL;
   if (peek_proc_data_size(pid, (void*)(infos->regs.rip), instr, sizeof(instr)))
     return (NULL);
   if (!((opcode & 0x00ffU) ^ 0x00e8U))
-    res = (void*)((size_t)(infos->regs.rip) + ((*((int*)(&instr[1]))) + 5));
+    res = (void*)((void*)(infos->regs.rip) + (*((int32_t*)(&instr[1]))) + 5);
   else if (!((opcode & 0x00ffU) ^ 0x00ffU))
-    res = (void*)((size_t)(0U) + ((*((int*)(&instr[2]))) + 5));
+    {
+      modbyte = ((opcode & 0xff00U) >> 8);
+      res = (void*)three_bit_register(infos, modbyte & 0x7U, 0);
+    }
+  else if (!((opcode & 0x00ffU) ^ 0x009aU))
+    res = (void*)((uint64_t)(*((int32_t*)(&instr[1]))) + 7);
   return (res);
 }
