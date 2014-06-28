@@ -12,13 +12,23 @@
 
 void	func_info(t_func *func, void *addr, t_ftrace *trace)
 {
+  int	symbol;
+  char	*tmp;
+  void	*sym;
+
   func->addr = addr;
   free(func->binary_name);
   free(func->name);
-
-  func->binary_name = strdup("a.out");
-  func->name = strdup("func");
-
+  symbol = find_symbols_by_addr(&trace->elf, trace->symbols_list, addr);
+  if (symbol == -1)
+    {
+      func->binary_name = strdup("a.out");
+      func->name = strdup("func");
+      return ;
+    }
+  sym = trace->symbols_list[symbol];
+  tmp = trace->elf.symbol_name(sym, trace->symstr, &trace->file);
+  func->name = strdup(tmp ? tmp : "func");
 }
 
 void	free_info(t_func *func)

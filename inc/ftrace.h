@@ -39,6 +39,8 @@ typedef struct		s_ftrace
   int			quit;
   int			sizetable;
   t_syscall_info	*systable;
+  void			**symbols_list;
+  const char		*symstr;
 }			t_ftrace;
 
 char	*prog_full_path(char *prog);

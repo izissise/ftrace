@@ -25,10 +25,31 @@ char		*symbols_str_32(Elf32_Ehdr *elf, int sym, t_file *file)
   return (res);
 }
 
+char		symbol_type32(Elf32_Sym *sym)
+{
+  return ((sym->st_shndx == SHN_ABS) ?
+          ((ELF32_ST_BIND(sym->st_info) == STB_GLOBAL) ? 'A' : 'a') :
+          (sym->st_shndx == SHN_COMMON) ? ('C') :
+          (sym->st_shndx == SHN_UNDEF) ?
+          ((ELF32_ST_BIND(sym->st_info) == STB_WEAK) ?
+           ((ELF32_ST_TYPE(sym->st_info) == STT_OBJECT) ? 'v' : 'w') : ('U')) :
+          (ELF32_ST_TYPE(sym->st_info) == STT_GNU_IFUNC) ? ('i') :
+          (ELF32_ST_BIND(sym->st_info) == STB_WEAK) ?
+          ((ELF32_ST_TYPE(sym->st_info) == STT_OBJECT) ? 'V' : 'W')
+          : ('?'));
+}
+
 char	*symbol_name32(Elf32_Sym *sym, char *symstr, t_file *file)
 {
   if (((void*)(symstr + sym->st_name) >= file->data + file->size)
       || (symstr[sym->st_name] == '\0'))
     return (NULL);
   return (&symstr[sym->st_name]);
+}
+
+void	*symbol_addr32(Elf32_Sym *sym, t_file *file)
+{
+  if ((void*)sym + sizeof(Elf32_Sym) > file->data + file->size)
+    return (NULL);
+  return ((void*)((Elf64_Addr)(sym->st_value)));
 }

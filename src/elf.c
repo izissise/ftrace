@@ -44,6 +44,8 @@ int	init_elf(t_elf *elf, t_file *file)
   elf->section_number = IS_32(&section_number32, &section_number64);
   elf->symbols_str = IS_32(&symbols_str_32, &symbols_str_64);
   elf->symbol_name = IS_32(&symbol_name32, &symbol_name64);
+  elf->symbol_type = IS_32(&symbol_type32, &symbol_type64);
+  elf->symbol_addr = IS_32(&symbol_addr32, &symbol_addr64);
   elf->sh_offset = IS_32(&sh_offset32, &sh_offset64);
   elf->sh_size = IS_32(&sh_size32, &sh_size64);
   elf->sh_addr = IS_32(&sh_addr32, &sh_addr64);
@@ -56,12 +58,22 @@ int	init_elf(t_elf *elf, t_file *file)
 
 int	load_elf(char *path, t_ftrace *trace)
 {
+  int	sym;
+  char	*symstr;
+
   if ((open_file(&(trace->file), path, O_RDONLY, 0) == -1)
       || check_valid_elf(&(trace->file))
       || init_elf(&(trace->elf), &(trace->file))
       || trace->elf.check_elf_size(trace->elf.elf, &(trace->file)))
     return (1);
   trace->elf.elf = trace->file.data;
+  if (((sym = find_section(&trace->elf, ".symtab", 0, &(trace->file))) != -1)
+      && ((symstr = trace->elf.symbols_str(trace->elf.elf, sym,
+                    &(trace->file))) != NULL))
+    {
+      trace->symstr = symstr;
+      trace->symbols_list = list_symbols(&(trace->elf), sym, &(trace->file));
+    }
   return (0);
 }
 

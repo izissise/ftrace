@@ -38,6 +38,8 @@ struct		s_elf
   char		*(*sh_section_name)();
   char		*(*symbols_str)();
   char		*(*symbol_name)();
+  char		(*symbol_type)();
+  void		(*symbol_addr)();
 };
 
 void		*deref(void *addr, t_file *file);
@@ -48,6 +50,8 @@ int		find_section(t_elf *elf, const char *section,
                    int start, t_file *file);
 int		find_section_type(t_elf *elf, uint32_t type,
                         int start, t_file *file);
+void		**list_symbols(t_elf *elf, int sh, t_file *file);
+int		find_symbols_by_addr(t_elf *elf, void **symlist, void *addr);
 
 void		*get_section_table64(Elf64_Ehdr *elf, t_file *file);
 int		check_elf_size64(Elf64_Ehdr *elf, t_file *file);
@@ -61,6 +65,8 @@ uint32_t	sh_type64(Elf64_Ehdr *elf, int idx, t_file *file);
 char		*sh_section_name64(Elf64_Ehdr *elf, int idx, t_file *file);
 char		symbol_sect_type64(Elf64_Ehdr *elf, Elf64_Sym *sym,
                            t_file *file);
+char		symbol_type64(Elf64_Sym *sym);
+void		*symbol_addr64(Elf64_Sym *sym, t_file *file);
 char		symclass_type64(Elf64_Ehdr *elf, Elf64_Sym *sym, t_file *file);
 
 void		*get_section_table32(Elf32_Ehdr *elf, t_file *file);
@@ -75,6 +81,8 @@ uint32_t	sh_type32(Elf32_Ehdr *elf, int idx, t_file *file);
 char		*sh_section_name32(Elf32_Ehdr *elf, int idx, t_file *file);
 char		symbol_sect_type32(Elf32_Ehdr *elf, Elf32_Sym *sym,
                            t_file *file);
+char		symbol_type32(Elf32_Sym *sym);
+void		*symbol_addr32(Elf32_Sym *sym, t_file *file);
 char		symclass_type32(Elf32_Ehdr *elf, Elf32_Sym *sym, t_file *file);
 
 #endif /* !SYMBOLS_H_INCLUDED */

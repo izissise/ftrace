@@ -41,8 +41,6 @@ int	check_elf_size32(Elf32_Ehdr *elf, t_file *file)
       size += sh_size32(elf, i, file);
       i++;
     }
-  printf("size: %d filesize: %ld\n", size, file->size);
-  printf("e_phentsize: %u, e_phnum %u\n", elf->e_phentsize, elf->e_phnum);
-  return (1);
+  size += elf->e_phnum * elf->e_phentsize;
   return (0);
 }

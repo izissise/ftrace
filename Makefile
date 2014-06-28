@@ -27,6 +27,9 @@ SRC		=	main.c \
 			strace.c \
 			symbol32.c \
 			symbol64.c \
+			symbol_type32.c \
+			symbol_type64.c \
+			symbols_search.c \
 			func_name.c
 
 CC		=	gcc
