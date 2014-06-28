@@ -53,7 +53,8 @@ int	load_elf(char *path, t_ftrace *trace);
 
 inline int	is_ret_opcode(unsigned short opcode);
 inline int	is_call_opcode(unsigned short opcode);
-void	*calc_call(unsigned short opcode, struct user *infos, pid_t pid);
+void	*calc_call(unsigned short opcode, struct user *infos,
+                 pid_t pid, int extended);
 
 uint64_t	three_bit_register(struct user *infos, uint8_t tbit, int extended);
 

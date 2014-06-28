@@ -13,13 +13,13 @@
 #include "syscall_x86.h"
 
 void			call_instruction(t_ftrace *trace, struct user *infos,
-                           short opcode)
+                           short opcode, int extended)
 {
   t_func		func;
   void			*call;
 
   memset(&func, 0, sizeof(t_func));
-  call = calc_call(opcode, infos, trace->pid);
+  call = calc_call(opcode, infos, trace->pid, extended);
   if (call)
     {
       func_info(&func, call, trace);
@@ -60,7 +60,7 @@ int			check_call(t_ftrace *trace)
                                    (short*)&opcode, 1))
                   && is_call_opcode(opcode)))
               return (0);
-          call_instruction(trace, &infos, opcode);
+          call_instruction(trace, &infos, opcode, (tmp == 2));
         }
     }
   return (0);

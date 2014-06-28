@@ -59,7 +59,8 @@ inline int	is_ret_opcode(unsigned short opcode)
   return (0);
 }
 
-void	*calc_call(unsigned short opcode, struct user *infos, pid_t pid)
+void	*calc_call(unsigned short opcode, struct user *infos,
+                 pid_t pid, int extended)
 {
   char	instr[10];
   void	*res;
@@ -73,7 +74,8 @@ void	*calc_call(unsigned short opcode, struct user *infos, pid_t pid)
   else if (!((opcode & 0x00ffU) ^ 0x00ffU))
     {
       modbyte = ((opcode & 0xff00U) >> 8);
-      res = (void*)three_bit_register(infos, modbyte & 0x7U, 0);
+
+      res = (void*)three_bit_register(infos, modbyte & 0x7U, extended);
     }
   else if (!((opcode & 0x00ffU) ^ 0x009aU))
     res = (void*)((uint64_t)(*((int32_t*)(&instr[1]))) + 7);

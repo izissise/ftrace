@@ -13,16 +13,35 @@ x86-64:
    c:   ff d7                   callq  *%rdi
    e:   ff d6                   callq  *%rsi
   10:   41 ff d0                callq  *%r8
-  10:   41 ff d1                callq  *%r9
-  13:   41 ff d2                callq  *%r10
-  16:   41 ff d3                callq  *%r11
-  19:   41 ff d4                callq  *%r12
-  1c:   41 ff d5                callq  *%r13
-  1f:   41 ff d6                callq  *%r14
-  22:   41 ff d7                callq  *%r15
-  25:   e8 12 00 00 00          callq  0x3c
-  2a:   e8 eb be ad de          callq  0xffffffffdeadbf1a
-  2f:   e8 a3 0b 30 a7          callq  0xffffffffa7300bd7
+  13:   41 ff d1                callq  *%r9
+  16:   41 ff d2                callq  *%r10
+  19:   41 ff d3                callq  *%r11
+  1c:   41 ff d4                callq  *%r12
+  1f:   41 ff d5                callq  *%r13
+  22:   41 ff d6                callq  *%r14
+  25:   41 ff d7                callq  *%r15
+  28:   ff 10                   callq  *(%rax)
+  2a:   ff 13                   callq  *(%rbx)
+  2c:   ff 11                   callq  *(%rcx)
+  2e:   ff 12                   callq  *(%rdx)
+  30:   ff 14 24                callq  *(%rsp)
+  33:   ff 55 00                callq  *0x0(%rbp)
+  36:   ff 17                   callq  *(%rdi)
+  38:   ff 16                   callq  *(%rsi)
+  3a:   41 ff 10                callq  *(%r8)
+  3d:   41 ff 11                callq  *(%r9)
+  40:   41 ff 12                callq  *(%r10)
+  43:   41 ff 13                callq  *(%r11)
+  46:   41 ff 14 24             callq  *(%r12)
+  4a:   41 ff 55 00             callq  *0x0(%r13)
+  4e:   41 ff 16                callq  *(%r14)
+  51:   41 ff 17                callq  *(%r15)
+  54:   ff 50 01                callq  *0x1(%rax)
+  57:   41 ff 57 01             callq  *0x1(%r15)
+  5b:   41 ff 55 32             callq  *0x32(%r13)
+  5f:   e8 12 00 00 00          callq  0x76
+  64:   e8 eb be ad de          callq  0xffffffffdeadbf54
+  69:   e8 a3 0b 30 a7          callq  0xffffffffa7300c11
 i386:
    0:   ff d0                   call   *%eax
    2:   ff d3                   call   *%ebx
