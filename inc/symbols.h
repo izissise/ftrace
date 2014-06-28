@@ -29,6 +29,7 @@ struct		s_elf
   int		type;
   void		*elf;
   void		*(*get_section_table)();
+  int		*(*check_elf_size)();
   size_t	(*section_number)();
   size_t	(*sh_offset)();
   size_t	(*sh_size)();
@@ -49,6 +50,7 @@ int		find_section_type(t_elf *elf, uint32_t type,
                         int start, t_file *file);
 
 void		*get_section_table64(Elf64_Ehdr *elf, t_file *file);
+int		check_elf_size64(Elf64_Ehdr *elf, t_file *file);
 size_t		section_number64(Elf64_Ehdr *elf);
 char		*symbols_str_64(Elf64_Ehdr *elf, int sym, t_file *file);
 char		*symbol_name64(Elf64_Sym *sym, char *symstr, t_file *file);
@@ -62,6 +64,7 @@ char		symbol_sect_type64(Elf64_Ehdr *elf, Elf64_Sym *sym,
 char		symclass_type64(Elf64_Ehdr *elf, Elf64_Sym *sym, t_file *file);
 
 void		*get_section_table32(Elf32_Ehdr *elf, t_file *file);
+int		check_elf_size32(Elf32_Ehdr *elf, t_file *file);
 size_t		section_number32(Elf32_Ehdr *elf);
 char		*symbols_str_32(Elf32_Ehdr *elf, int sym, t_file *file);
 char		*symbol_name32(Elf32_Sym *sym, char *symstr, t_file *file);

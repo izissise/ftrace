@@ -14,8 +14,8 @@ void		*get_section_table32(Elf32_Ehdr *elf, t_file *file)
 {
   Elf32_Shdr	*shtable;
 
-  if (!(((void*)&(elf->e_shoff) >= file->data)
-        && ((void*)&(elf->e_shoff) <= (file->data + file->size))))
+  if (!(((void*)(&(elf->e_shoff)) >= file->data)
+        && ((void*)(&(elf->e_shoff)) <= (file->data + file->size))))
     shtable = file->data;
   else
     shtable = file->data + elf->e_shoff;
@@ -25,4 +25,24 @@ void		*get_section_table32(Elf32_Ehdr *elf, t_file *file)
 size_t	section_number32(Elf32_Ehdr *elf)
 {
   return (elf->e_shnum);
+}
+
+int	check_elf_size32(Elf32_Ehdr *elf, t_file *file)
+{
+  int	i;
+  int	nbsection;
+  int	size;
+
+  nbsection = section_number32(elf);
+  i = 0;
+  size = sizeof(Elf32_Ehdr);
+  while (i < nbsection)
+    {
+      size += sh_size32(elf, i, file);
+      i++;
+    }
+  printf("size: %d filesize: %ld\n", size, file->size);
+  printf("e_phentsize: %u, e_phnum %u\n", elf->e_phentsize, elf->e_phnum);
+  return (1);
+  return (0);
 }

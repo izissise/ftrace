@@ -11,27 +11,6 @@
 #include "symbols.h"
 #include "ftrace.h"
 
-int	check_elf_binary_size(t_elf *elf, t_file *file)
-{
-  int	i;
-  int	nbsection;
-  int	size;
-
-  nbsection = elf->section_number(elf->elf);
-  i = 0;
-  size = ((elf->type == ELFCLASS32) ? sizeof(Elf32_Ehdr) : sizeof(Elf64_Ehdr));
-  while (i < nbsection)
-    {
-      size += elf->sh_size(elf->elf, i, file);
-      i++;
-    }
-//  printf("size: %d filesize: %ld\n", size, file->size);
-//  printf("e_phentsize: %u, e_phnum %u\n", ((Elf64_Ehdr*)elf->elf)->e_phentsize,
-//         ((Elf64_Ehdr*)elf->elf)->e_phnum);
-//  return (1);
-  return (0);
-}
-
 int			check_valid_elf(t_file *file)
 {
   Elf32_Ehdr		*elf;
@@ -70,6 +49,8 @@ int	init_elf(t_elf *elf, t_file *file)
   elf->sh_addr = IS_32(&sh_addr32, &sh_addr64);
   elf->sh_section_name = IS_32(&sh_section_name32, &sh_section_name64);
   elf->sh_type = IS_32(&sh_type32, &sh_type64);
+  elf->check_elf_size = IS_32(&check_elf_size32,
+                              &check_elf_size64);
   return (0);
 }
 
@@ -78,7 +59,7 @@ int	load_elf(char *path, t_ftrace *trace)
   if ((open_file(&(trace->file), path, O_RDONLY, 0) == -1)
       || check_valid_elf(&(trace->file))
       || init_elf(&(trace->elf), &(trace->file))
-      || check_elf_binary_size(&(trace->elf), &(trace->file)))
+      || trace->elf.check_elf_size(trace->elf.elf, &(trace->file)))
     return (1);
   trace->elf.elf = trace->file.data;
   return (0);
