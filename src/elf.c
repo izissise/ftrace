@@ -11,6 +11,27 @@
 #include "symbols.h"
 #include "ftrace.h"
 
+int	check_elf_binary_size(t_elf *elf, t_file *file)
+{
+  int	i;
+  int	nbsection;
+  int	size;
+
+  nbsection = elf->section_number(elf->elf);
+  i = 0;
+  size = ((elf->type == ELFCLASS32) ? sizeof(Elf32_Ehdr) : sizeof(Elf64_Ehdr));
+  while (i < nbsection)
+    {
+      size += elf->sh_size(elf->elf, i, file);
+      i++;
+    }
+//  printf("size: %d filesize: %ld\n", size, file->size);
+//  printf("e_phentsize: %u, e_phnum %u\n", ((Elf64_Ehdr*)elf->elf)->e_phentsize,
+//         ((Elf64_Ehdr*)elf->elf)->e_phnum);
+//  return (1);
+  return (0);
+}
+
 int			check_valid_elf(t_file *file)
 {
   Elf32_Ehdr		*elf;
@@ -28,7 +49,8 @@ int			check_valid_elf(t_file *file)
       dprintf(STDERR_FILENO, "%s: File format not recognized\n", file->name);
       return (1);
     }
-  if ((elf->e_type == ELFCLASS64) && (file->size < sizeof(Elf64_Ehdr)))
+  if (((elf->e_type == ELFCLASS64) && (file->size < sizeof(Elf64_Ehdr)))
+      || ((elf->e_type == ELFCLASS32) && (file->size < sizeof(Elf32_Ehdr))))
     return (1);
   return (0);
 }
@@ -55,8 +77,10 @@ int	load_elf(char *path, t_ftrace *trace)
 {
   if ((open_file(&(trace->file), path, O_RDONLY, 0) == -1)
       || check_valid_elf(&(trace->file))
-      || init_elf(&(trace->elf), &(trace->file)))
+      || init_elf(&(trace->elf), &(trace->file))
+      || check_elf_binary_size(&(trace->elf), &(trace->file)))
     return (1);
   trace->elf.elf = trace->file.data;
   return (0);
 }
+

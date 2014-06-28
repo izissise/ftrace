@@ -14,7 +14,11 @@ void		*get_section_table64(Elf64_Ehdr *elf, t_file *file)
 {
   Elf64_Shdr	*shtable;
 
-  shtable = ((size_t)file->data) + deref(&(elf->e_shoff), file);
+  if (!(((void*)&(elf->e_shoff) >= file->data)
+        && ((void*)&(elf->e_shoff) <= (file->data + file->size))))
+    shtable = file->data;
+  else
+    shtable = file->data + elf->e_shoff;
   return (shtable);
 }
 

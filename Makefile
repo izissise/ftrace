@@ -9,7 +9,6 @@
 ##
 
 SRC		=	main.c \
-			dereference.c \
 			elf.c \
 			endianess.c \
 			file.c \

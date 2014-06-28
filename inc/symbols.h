@@ -42,6 +42,7 @@ struct		s_elf
 void		*deref(void *addr, t_file *file);
 int		check_valid_elf(t_file *file);
 int		init_elf(t_elf *elf, t_file *file);
+int		check_elf_binary_size(t_elf *elf, t_file *file);
 int		find_section(t_elf *elf, const char *section,
                    int start, t_file *file);
 int		find_section_type(t_elf *elf, uint32_t type,

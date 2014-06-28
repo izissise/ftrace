@@ -14,9 +14,11 @@ void	func_info(t_func *func, void *addr, t_ftrace *trace)
 {
   func->addr = addr;
   free(func->binary_name);
-  func->binary_name = strdup("a.out");
   free(func->name);
+
+  func->binary_name = strdup("a.out");
   func->name = strdup("func");
+
 }
 
 void	free_info(t_func *func)
