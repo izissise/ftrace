@@ -15,6 +15,7 @@
 ** 9a Xx call
 ** ff /2 Xx call
 ** ff /3 Xx call
+** 41 extend for register in x86_x64
 */
 
 inline int	is_call_opcode(unsigned short opcode)
@@ -24,6 +25,8 @@ inline int	is_call_opcode(unsigned short opcode)
   if (!((opcode & 0x00ffU) ^ 0x00e8U)
       || !((opcode & 0x00ffU) ^ 0x009aU))
     return (1);
+  if (opcode == 0xff41)
+    return (2);
   if (!((opcode & 0x00ffU) ^ 0x00ffU))
     {
       modbyte = ((opcode & 0xff00U) >> 8);

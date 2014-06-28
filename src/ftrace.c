@@ -12,18 +12,34 @@
 #include "syscall_x86_x64.h"
 #include "syscall_x86.h"
 
+void			call_instruction(t_ftrace *trace, struct user *infos,
+                           short opcode)
+{
+  t_func		func;
+  void			*call;
+
+  memset(&func, 0, sizeof(t_func));
+  call = calc_call(opcode, infos, trace->pid);
+  if (call)
+    {
+      func_info(&func, call, trace);
+      printf("call %s_%p@%s\n", func.name, func.addr, func.binary_name);
+      //print -> search symbol in elf
+      //go see nm/display_info to how to do that
+      //push calling function and continue and prřint into graph
+      free_info(&func);
+    }
+}
+
 int			check_call(t_ftrace *trace)
 {
   struct user		infos;
   unsigned short	opcode;
-  void			*call;
   pid_t		pid;
-  t_func		func;
+  int			tmp;
 
   pid = trace->pid;
   opcode = 0;
-  call = NULL;
-  memset(&func, 0, sizeof(t_func));
   if ((ptrace(PTRACE_GETREGS, pid, NULL, &infos) != -1)
       && (!peek_proc_data(pid, (void*)(infos.regs.rip), (short*)&opcode, 1)))
     {
@@ -31,25 +47,20 @@ int			check_call(t_ftrace *trace)
         {
           //print syscall in graph with current syscall
         }
-      else if (is_call_opcode(opcode))
-        {
-          call = calc_call(opcode, &infos, pid);
-          // printf("call %p %x %p\n", (void*)(infos.regs.rip),  opcode & 0xffU, call);
-          if (call)
-            {
-              func_info(&func, call, trace);
-              printf("call %s_%p@%s\n", func.name, func.addr, func.binary_name);
-              //print -> search symbol in elf
-              //go see nm/display_info to how to do that
-              //push calling function and continue and prřint into graph
-              free_info(&func);
-            }
-        }
       else if (is_ret_opcode(opcode))
         {
           printf("ret\n");
           // printf("ret %p %x\n", (void*)(infos.regs.rip), opcode & 0xffU);
           //pop function
+        }
+      else if ((tmp = is_call_opcode(opcode)))
+        {
+          if (tmp == 2)
+            if (!((!peek_proc_data(pid, (void*)(infos.regs.rip + 1),
+                                   (short*)&opcode, 1))
+                  && is_call_opcode(opcode)))
+              return (0);
+          call_instruction(trace, &infos, opcode);
         }
     }
   return (0);
