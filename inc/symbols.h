@@ -39,7 +39,7 @@ struct		s_elf
   char		*(*symbols_str)();
   char		*(*symbol_name)();
   char		(*symbol_type)();
-  void		(*symbol_addr)();
+  void		*(*symbol_addr)();
 };
 
 void		*deref(void *addr, t_file *file);
@@ -51,7 +51,8 @@ int		find_section(t_elf *elf, const char *section,
 int		find_section_type(t_elf *elf, uint32_t type,
                         int start, t_file *file);
 void		**list_symbols(t_elf *elf, int sh, t_file *file);
-int		find_symbols_by_addr(t_elf *elf, void **symlist, void *addr);
+int		find_symbols_by_addr(t_elf *elf, void **symlist,
+                           void *addr, t_file *file);
 
 void		*get_section_table64(Elf64_Ehdr *elf, t_file *file);
 int		check_elf_size64(Elf64_Ehdr *elf, t_file *file);

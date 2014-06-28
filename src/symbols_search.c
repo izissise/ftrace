@@ -35,8 +35,19 @@ void		**list_symbols(t_elf *elf, int sh, t_file *file)
   return (res);
 }
 
-int		find_symbols_by_addr(t_elf *elf, void **symlist, void *addr)
+int		find_symbols_by_addr(t_elf *elf, void **symlist,
+                           void *addr, t_file *file)
 {
+  int		i;
 
+  if (!symlist)
+    return (-1);
+  i = 0;
+  while (symlist[i])
+    {
+      if (elf->symbol_addr(symlist[i], file) == addr)
+        return (i);
+      i++;
+    }
   return (-1);
 }
