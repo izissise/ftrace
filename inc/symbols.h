@@ -42,7 +42,6 @@ struct		s_elf
   void		*(*symbol_addr)();
 };
 
-void		*deref(void *addr, t_file *file);
 int		check_valid_elf(t_file *file);
 int		init_elf(t_elf *elf, t_file *file);
 int		check_elf_binary_size(t_elf *elf, t_file *file);

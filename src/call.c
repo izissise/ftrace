@@ -59,45 +59,6 @@ inline int	is_ret_opcode(unsigned short opcode)
   return (0);
 }
 
-static inline void	*call_ff_case(struct user *infos, pid_t pid,
-                                  char instr[12], int extended)
-{
-  unsigned short		opcode;
-  uint8_t			modregrmbyte;
-  uint8_t			mod;
-  uint8_t			reg;
-  uint8_t			rm;
-  void				*res;
-  uint32_t		tmp;
-
-  res = NULL;
-  opcode = *((unsigned short*)instr);
-  modregrmbyte = ((opcode & 0xff00U) >> 8);
-  mod = (modregrmbyte >> 6) & 0x3U;
-  reg = (modregrmbyte >> 3) & 0x7U;
-  rm = (modregrmbyte) & 0x7U;
-  if (mod == 0x3U)
-    res = (void*)three_bit_register(infos, rm, extended);
-  else
-    {
-      if (rm == 0x4U)
-        {
-          printf("oops\n");
-        }
-      else if (rm == 0x5U)
-        {
-          printf("oops\n");
-        }
-      else
-        {
-          res = (void*)three_bit_register(infos, rm, extended);
-          if (peek_proc_data_size(pid, res, (void*)&res, sizeof(void*)))
-            return (NULL);
-        }
-    }
-  return (res);
-}
-
 void	*calc_call(unsigned short opcode, struct user *infos,
                  pid_t pid, int extended)
 {
