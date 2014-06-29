@@ -31,6 +31,7 @@ void			call_instruction(t_ftrace *trace, struct user *infos,
     }
 }
 
+static int space = 0;
 int			check_call(t_ftrace *trace)
 {
   struct user		infos;
@@ -49,18 +50,26 @@ int			check_call(t_ftrace *trace)
         }
       else if (is_ret_opcode(opcode))
         {
+          int i = -1;
+          while (++i < space)
+            printf(" ");
           printf("ret\n");
           // printf("ret %p %x\n", (void*)(infos.regs.rip), opcode & 0xffU);
           //pop function
+          space--;
         }
       else if ((tmp = is_call_opcode(opcode)))
         {
+          int i = -1;
+          while (++i < space)
+            printf(" ");
           if (tmp == 2)
             if (!((!peek_proc_data(pid, (void*)(infos.regs.rip + 1),
                                    (short*)&opcode, 1))
                   && is_call_opcode(opcode)))
               return (0);
           call_instruction(trace, &infos, opcode, (tmp == 2));
+          space++;
         }
     }
   return (0);

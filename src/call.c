@@ -59,25 +59,61 @@ inline int	is_ret_opcode(unsigned short opcode)
   return (0);
 }
 
+static inline void	*call_ff_case(struct user *infos, pid_t pid,
+                                  char instr[12], int extended)
+{
+  unsigned short		opcode;
+  uint8_t			modregrmbyte;
+  uint8_t			mod;
+  uint8_t			reg;
+  uint8_t			rm;
+  void				*res;
+  uint32_t		tmp;
+
+  res = NULL;
+  opcode = *((unsigned short*)instr);
+  modregrmbyte = ((opcode & 0xff00U) >> 8);
+  mod = (modregrmbyte >> 6) & 0x3U;
+  reg = (modregrmbyte >> 3) & 0x7U;
+  rm = (modregrmbyte) & 0x7U;
+  if (mod == 0x3U)
+    res = (void*)three_bit_register(infos, rm, extended);
+  else
+    {
+      if (rm == 0x4U)
+        {
+          printf("oops\n");
+        }
+      else if (rm == 0x5U)
+        {
+          printf("oops\n");
+        }
+      else
+        {
+          res = (void*)three_bit_register(infos, rm, extended);
+          if (peek_proc_data_size(pid, res, (void*)&res, sizeof(void*)))
+            return (NULL);
+        }
+    }
+  return (res);
+}
+
 void	*calc_call(unsigned short opcode, struct user *infos,
                  pid_t pid, int extended)
 {
-  char	instr[10];
+  char	instr[12];
   void	*res;
-  uint8_t	modbyte;
 
   res = NULL;
-  if (peek_proc_data_size(pid, (void*)(infos->regs.rip), instr, sizeof(instr)))
+  if (peek_proc_data_size(pid, (void*)(infos->regs.rip + extended),
+                          instr, sizeof(instr)))
     return (NULL);
   if (!((opcode & 0x00ffU) ^ 0x00e8U))
     res = (void*)((void*)(infos->regs.rip) + (*((int32_t*)(&instr[1]))) + 5);
   else if (!((opcode & 0x00ffU) ^ 0x00ffU))
-    {
-      modbyte = ((opcode & 0xff00U) >> 8);
-
-      res = (void*)three_bit_register(infos, modbyte & 0x7U, extended);
-    }
+    res = call_ff_case(infos, pid, instr, extended);
   else if (!((opcode & 0x00ffU) ^ 0x009aU))
     res = (void*)((uint64_t)(*((int32_t*)(&instr[1]))) + 7);
   return (res);
 }
+
