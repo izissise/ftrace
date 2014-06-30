@@ -14,6 +14,7 @@ SRC		=	main.c \
 			file.c \
 			liste.c \
 			liste_find.c \
+			node.c \
 			ftrace.c \
 			path.c \
 			call.c \
@@ -32,7 +33,8 @@ SRC		=	main.c \
 			symbol_type32.c \
 			symbol_type64.c \
 			symbols_search.c \
-			func_name.c
+			func_name.c \
+			find_func.c
 
 CC		=	gcc
 FILETYPE	=	.c
@@ -47,7 +49,7 @@ INCDIR		=	inc/
 
 CFLAGS		+=	-I$(INCDIR)
 CFLAGS		+=	-Wall -Wextra -Winit-self
-CFLAGS		+=	-Wunused-function -pipe
+CFLAGS		+=	-Wunused-function -pipe -g
 
 LDFLAGS		+=	-Wl,-O1
 

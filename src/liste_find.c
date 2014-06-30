@@ -23,3 +23,19 @@ t_list	*find_in_list(t_list *begin, void *data)
     }
   return (NULL);
 }
+
+void		add_to_list_top(t_list **begin, void *data)
+{
+  t_list	*tmp;
+
+  tmp = NULL;
+  if (*begin != NULL)
+    tmp = *begin;
+  if ((*begin = malloc(1 * sizeof(t_list))) == NULL)
+    {
+      *begin = tmp;
+      return ;
+    }
+  (*begin)->data = data;
+  (*begin)->next = tmp;
+}

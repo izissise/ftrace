@@ -10,26 +10,28 @@
 
 #include "ftrace.h"
 
-void	func_info(t_func *func, void *addr, t_ftrace *trace)
+t_func	*func_info(void *addr, t_ftrace *trace)
 {
-  int	symbol;
-  char	*tmp;
-  void	*sym;
+  t_func	*func;
+  int		symbol;
+  char		*tmp;
+  void		*sym;
 
+  if ((func = malloc(sizeof(t_func))) == NULL)
+    return (NULL);
   func->addr = addr;
-  free(func->binary_name);
-  free(func->name);
   symbol = find_symbols_by_addr(&trace->elf, trace->symbols_list,
                                 addr, &trace->file);
   func->binary_name = strdup(trace->file.name);
   if (symbol == -1)
     {
       func->name = strdup("func");
-      return ;
+      return (func);
     }
   sym = trace->symbols_list[symbol];
   tmp = trace->elf.symbol_name(sym, trace->symstr, &trace->file);
   func->name = strdup(tmp ? tmp : "func");
+  return (func);
 }
 
 void	free_info(t_func *func)
@@ -38,5 +40,6 @@ void	free_info(t_func *func)
     {
       free(func->binary_name);
       free(func->name);
+      free(func);
     }
 }

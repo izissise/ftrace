@@ -15,23 +15,20 @@
 void			call_instruction(t_ftrace *trace, struct user *infos,
                            short opcode, int extended)
 {
-  t_func		func;
+  t_node		*upnode;
+  t_node		*node;
   void			*call;
 
-  memset(&func, 0, sizeof(t_func));
   call = calc_call(opcode, infos, trace->pid, extended);
-  if (call)
+  upnode = trace->func_stack ? (t_node*)(trace->func_stack->data) : NULL;
+  if (call && (node = find_func(call, trace)))
     {
-      func_info(&func, call, trace);
-      printf("call %s_%p@%s\n", func.name, func.addr, func.binary_name);
-      //print -> search symbol in elf
-      //go see nm/display_info to how to do that
-      //push calling function and continue and prřint into graph
-      free_info(&func);
+      add_to_list_top(&(trace->func_stack), node);
+      if (upnode)
+        link_node(upnode, node);
     }
 }
 
-static int space = 0;
 int			check_call(t_ftrace *trace)
 {
   struct user		infos;
@@ -49,27 +46,15 @@ int			check_call(t_ftrace *trace)
           //print syscall in graph with current syscall
         }
       else if (is_ret_opcode(opcode))
-        {
-          int i = -1;
-          while (++i < space)
-            printf(" ");
-          printf("ret\n");
-          // printf("ret %p %x\n", (void*)(infos.regs.rip), opcode & 0xffU);
-          //pop function
-          space--;
-        }
+        rm_from_list(&(trace->func_stack), trace->func_stack, NULL);
       else if ((tmp = is_call_opcode(opcode)))
         {
-          int i = -1;
-          while (++i < space)
-            printf(" ");
           if (tmp == 2)
             if (!((!peek_proc_data(pid, (void*)(infos.regs.rip + 1),
                                    (short*)&opcode, 1))
                   && is_call_opcode(opcode)))
               return (0);
           call_instruction(trace, &infos, opcode, (tmp == 2));
-          space++;
         }
     }
   return (0);

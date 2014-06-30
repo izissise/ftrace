@@ -27,6 +27,9 @@
 # include "file.h"
 # include "symbols.h"
 # include "call.h"
+# include "liste.h"
+# include "node.h"
+# include "tab.h"
 
 # define UNSEDP __attribute__((unused))
 
@@ -41,6 +44,8 @@ typedef struct		s_ftrace
   t_syscall_info	*systable;
   void			**symbols_list;
   const char		*symstr;
+  t_list			*func_list;
+  t_list			*func_stack;
 }			t_ftrace;
 
 char	*prog_full_path(char *prog);
@@ -59,5 +64,7 @@ inline void	*call_ff_case(struct user *infos, pid_t pid,
                           char instr[12], int extended);
 
 uint64_t	three_bit_register(struct user *infos, uint8_t tbit, int extended);
+
+t_node	*find_func(void *call, t_ftrace *trace);
 
 #endif /* !FTRACE_H_INCLUDED */

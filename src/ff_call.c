@@ -14,11 +14,13 @@ inline static void	*deref_reg(struct user *infos, pid_t pid,
                                uint8_t rm, int extended)
 {
   void			*res;
+  uint64_t		tmp;
 
   res = (void*)three_bit_register(infos, rm, extended);
-  if (peek_proc_data_size(pid, res, (void*)&res, sizeof(void*)))
+  if (peek_proc_data_size(pid, res, (void*)&tmp, sizeof(tmp)))
     return (NULL);
-  return (res);
+  printf("deref: %p\n", (void*)(uint64_t)tmp);
+  return ((void*)(uint64_t)tmp);
 }
 
 inline static void	*displacement_value(char instr[12], int *instr_size,
@@ -37,8 +39,8 @@ inline static void	*displacement_value(char instr[12], int *instr_size,
       res = (void*)((int64_t)(*((int32_t*)(&instr[*instr_size]))));
       *instr_size += 4;
     }
-//  if (res)
-//    printf("Displacemnet !!!\n");
+  if (res)
+    printf("Displacemnet !!!\n");
   return (res);
 }
 
@@ -56,8 +58,8 @@ inline void		*call_ff_case(struct user *infos, pid_t pid,
   mod = ((((*((unsigned short*)instr)) & 0xff00U) >> 8) >> 6) & 0x3U;
   reg = ((((*((unsigned short*)instr)) & 0xff00U) >> 8) >> 3) & 0x7U;
   rm = ((((*((unsigned short*)instr)) & 0xff00U) >> 8)) & 0x7U;
-//  if (reg == 0x3U)
-//    printf("This is Madness !!\n");
+  if (reg == 0x3U)
+    printf("This is Madness !!\n");
   if (mod == 0x3U)
     res = (void*)three_bit_register(infos, rm, extended);
   else

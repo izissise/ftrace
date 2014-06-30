@@ -20,6 +20,7 @@ typedef struct		s_list
 }			t_list;
 
 void	add_to_list(t_list **begin, void *data);
+void	add_to_list_top(t_list **begin, void *data);
 void	rm_list(t_list *begin, void (*f)(void*));
 void	apply_on_list(t_list *begin, int (*f)(void*, void*), void *arg);
 void	rm_from_list(t_list **begin, t_list *trm, void (*f)(void*));
