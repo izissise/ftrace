@@ -98,6 +98,7 @@ int		main(int ac, char **av, char **envp)
       if (!trace.forked)
         signal(SIGINT, &sig_handler);
       trace_pid(&trace);
+      print_graph(&trace);
       free_stuff(&trace);
     }
   else

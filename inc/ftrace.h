@@ -68,4 +68,6 @@ uint64_t	three_bit_register(struct user *infos, uint8_t tbit, int extended);
 t_node	*find_func(void *call, t_ftrace *trace);
 void		destroy_node_func(void *ptr);
 
+void		print_graph(t_ftrace *trace);
+
 #endif /* !FTRACE_H_INCLUDED */

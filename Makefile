@@ -34,7 +34,8 @@ SRC		=	main.c \
 			symbol_type64.c \
 			symbols_search.c \
 			func_name.c \
-			find_func.c
+			find_func.c \
+			dotty.c
 
 CC		=	gcc
 FILETYPE	=	.c
