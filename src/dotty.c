@@ -53,7 +53,7 @@ void		print_graph(t_ftrace *trace)
   char		filename[BUFSIZ];
   int		fd;
 
-  snprintf(filename, sizeof(filename), "%s.%s", trace->file.name, "dot");
+  snprintf(filename, sizeof(filename), "%s.%s", "funcgraph", "dot");
   if ((fd = open(filename, O_TRUNC | O_CREAT | O_WRONLY, 0666)) == -1)
     return ;
   dprintf(fd, "digraph a {\n");
