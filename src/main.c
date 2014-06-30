@@ -73,6 +73,14 @@ pid_t	ptrace_attach(pid_t pid, t_ftrace *trace)
   return (pid);
 }
 
+void	free_stuff(t_ftrace *trace)
+{
+  rm_list(trace->func_list, &destroy_node_func);
+  rm_list(trace->func_stack, NULL);
+  free(trace->symbols_list);
+  trace->func_list = NULL;
+}
+
 int		main(int ac, char **av, char **envp)
 {
   t_ftrace	trace;
@@ -90,6 +98,7 @@ int		main(int ac, char **av, char **envp)
       if (!trace.forked)
         signal(SIGINT, &sig_handler);
       trace_pid(&trace);
+      free_stuff(&trace);
     }
   else
     return (1);

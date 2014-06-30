@@ -59,7 +59,8 @@ void	rm_list(t_list *begin, void (*f)(void*))
     {
       if (begin->next != NULL)
         rm_list(begin->next, f);
-      (*f)(begin->data);
+      if (f)
+        (*f)(begin->data);
       free(begin);
     }
 }

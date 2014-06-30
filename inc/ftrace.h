@@ -66,5 +66,6 @@ inline void	*call_ff_case(struct user *infos, pid_t pid,
 uint64_t	three_bit_register(struct user *infos, uint8_t tbit, int extended);
 
 t_node	*find_func(void *call, t_ftrace *trace);
+void		destroy_node_func(void *ptr);
 
 #endif /* !FTRACE_H_INCLUDED */
