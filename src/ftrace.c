@@ -27,6 +27,7 @@ void			call_instruction(t_ftrace *trace, struct user *infos,
       if (upnode)
         link_node(upnode, node);
     }
+ // printf("call %p\n", call);
 }
 
 void			syscall_instruction(t_ftrace *trace, struct user *infos)

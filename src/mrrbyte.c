@@ -10,10 +10,12 @@
 
 #include "ftrace.h"
 
-uint64_t	three_bit_register(struct user *infos, uint8_t tbit, int extended)
+uint64_t	three_bit_register(struct user *infos, uint8_t tbit)
 {
   uint64_t	regs[16];
+  int		extended;
 
+  extended = tbit >> 3;
   regs[0] = infos->regs.rax;
   regs[1] = infos->regs.rcx;
   regs[2] = infos->regs.rdx;

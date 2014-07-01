@@ -11,15 +11,14 @@
 #include "ftrace.h"
 
 inline static void	*deref_reg(struct user *infos, pid_t pid,
-                               uint8_t rm, int extended)
+                               uint8_t rm, void *displacement)
 {
   void			*res;
   uint64_t		tmp;
 
-  res = (void*)three_bit_register(infos, rm, extended);
+  res = (void*)three_bit_register(infos, rm) + (int64_t)displacement;
   if (peek_proc_data_size(pid, res, (void*)&tmp, sizeof(tmp)))
     return (NULL);
-  printf("deref: %p\n", (void*)(uint64_t)tmp);
   return ((void*)(uint64_t)tmp);
 }
 
@@ -39,8 +38,8 @@ inline static void	*displacement_value(char instr[12], int *instr_size,
       res = (void*)((int64_t)(*((int32_t*)(&instr[*instr_size]))));
       *instr_size += 4;
     }
-  if (res)
-    printf("Displacemnet !!!\n");
+  if (!res)
+    printf("Bad Displacement!\n");
   return (res);
 }
 
@@ -61,26 +60,12 @@ inline void		*call_ff_case(struct user *infos, pid_t pid,
   if (reg == 0x3U)
     printf("This is Madness !!\n");
   if (mod == 0x3U)
-    res = (void*)three_bit_register(infos, rm, extended);
+    res = (void*)three_bit_register(infos, rm + (extended << 3));
   else
     {
-      if (rm == 0x4U)
-        {
-          //sib byte
-          printf("oops\n");
-          instr_size += 1;
-        }
-      else if (rm == 0x5U)
-        {
-          // direct value
-          printf("oops\n");
-          instr_size += 1;
-        }
-      else
-        res = deref_reg(infos, pid, rm, extended);
-      res = (void*)((int64_t)res
-                    + (int64_t)displacement_value(instr, &instr_size, mod));
+      instr_size += ((rm == 0x4U) || (rm == 0x5U));
+      res = (void*)((int64_t)displacement_value(instr, &instr_size, mod));
+      res = deref_reg(infos, pid, rm + (extended << 3 ), res);
     }
   return (res);
 }
-

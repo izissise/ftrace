@@ -65,7 +65,7 @@ void		*calc_call(unsigned short opcode, struct user *infos,
 inline void	*call_ff_case(struct user *infos, pid_t pid,
                           char instr[12], int extended);
 
-uint64_t	three_bit_register(struct user *infos, uint8_t tbit, int extended);
+uint64_t	three_bit_register(struct user *infos, uint8_t tbit);
 
 t_node	*find_func(void *call, t_ftrace *trace);
 t_node	*find_func_name(char *name, t_ftrace *trace);
