@@ -20,8 +20,12 @@ int		print_func_info(void *ptr1, void *ptr2)
   fd = *((int*)ptr2);
   if (!n || !(func = (t_func*)n->data))
     return (1);
-  dprintf(fd, "\t%lu [label=\"%s_%p@%s\"];\n", (uint64_t)func->addr,
-          func->name, func->addr, func->binary_name);
+  if (func->addr == (void*)0x1U)
+    dprintf(fd, "\t\"%s%lu\" [label=\"%s\"];\n", func->name,
+            (uint64_t)func->addr, func->name);
+  else
+    dprintf(fd, "\t\"%s%lu\" [label=\"%s_%p@%s\"];\n", func->name,
+            (uint64_t)func->addr, func->name, func->addr, func->binary_name);
   return (0);
 }
 
@@ -41,8 +45,9 @@ int		print_func_graph(void *ptr1, void *ptr2)
   while (n->tab[i])
     {
       if ((tmp = (t_func*)((n->tab[i])->data)))
-        dprintf(fd, "\t%lu -> %lu;\n",
-                (uint64_t)func->addr, (uint64_t)tmp->addr);
+        dprintf(fd, "\t\"%s%lu\" -> \"%s%lu\";\n",
+                func->name, (uint64_t)func->addr,
+                tmp->name, (uint64_t)tmp->addr);
       i++;
     }
   return (0);
@@ -53,7 +58,7 @@ void		print_graph(t_ftrace *trace)
   char		filename[BUFSIZ];
   int		fd;
 
-  snprintf(filename, sizeof(filename), "%s.%s", "funcgraph", "dot");
+  snprintf(filename, sizeof(filename), GRAPHFILENAME);
   if ((fd = open(filename, O_TRUNC | O_CREAT | O_WRONLY, 0666)) == -1)
     return ;
   dprintf(fd, "digraph a {\n");

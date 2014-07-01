@@ -34,6 +34,18 @@ t_func	*func_info(void *addr, t_ftrace *trace)
   return (func);
 }
 
+t_func	*create_func_infos(void *addr, char *name, char *binary_name)
+{
+  t_func	*func;
+
+  if ((func = malloc(sizeof(t_func))) == NULL)
+    return (NULL);
+  func->addr = addr;
+  func->name = strdup(name);
+  func->binary_name = strdup(binary_name);
+  return (func);
+}
+
 void	free_info(t_func *func)
 {
   if (func)

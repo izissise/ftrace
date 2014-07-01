@@ -77,4 +77,3 @@ void	*calc_call(unsigned short opcode, struct user *infos,
     res = (void*)((uint64_t)(*((int32_t*)(&instr[1]))) + 7);
   return (res);
 }
-

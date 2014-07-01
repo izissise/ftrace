@@ -29,7 +29,27 @@ void			call_instruction(t_ftrace *trace, struct user *infos,
     }
 }
 
-int			check_call(t_ftrace *trace)
+void			syscall_instruction(t_ftrace *trace, struct user *infos)
+{
+  t_node		*upnode;
+  t_node		*node;
+  char		*name;
+  int			sysnb;
+
+  sysnb = infos->regs.rax;
+  if (!((sysnb < trace->sizetable) && (sysnb >= 0)))
+    return ;
+  name = ((trace->systable)[sysnb]).name;
+  upnode = trace->func_stack ? (t_node*)(trace->func_stack->data) : NULL;
+  if ((node = find_func_name(name, trace)))
+    {
+      add_to_list_top(&(trace->func_stack), node);
+      if (upnode)
+        link_node(upnode, node);
+    }
+}
+
+int			check_call(t_ftrace * trace)
 {
   struct user		infos;
   unsigned short	opcode;
@@ -42,9 +62,7 @@ int			check_call(t_ftrace *trace)
       && (!peek_proc_data(pid, (void*)(infos.regs.rip), (short*)&opcode, 1)))
     {
       if (is_syscall(opcode))
-        {
-          //print syscall in graph with current syscall
-        }
+        syscall_instruction(trace, &infos);
       else if (is_ret_opcode(opcode))
         rm_from_list(&(trace->func_stack), trace->func_stack, NULL);
       else if ((tmp = is_call_opcode(opcode)))
@@ -73,7 +91,7 @@ int	check_status(pid_t pid)
   return (0);
 }
 
-void	trace_pid(t_ftrace *trace)
+void	trace_pid(t_ftrace * trace)
 {
   pid_t	pid;
   t_elf	*elf;

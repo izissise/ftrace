@@ -33,6 +33,8 @@
 
 # define UNSEDP __attribute__((unused))
 
+# define GRAPHFILENAME "funcgraph.dot"
+
 typedef struct		s_ftrace
 {
   pid_t			pid;
@@ -66,6 +68,8 @@ inline void	*call_ff_case(struct user *infos, pid_t pid,
 uint64_t	three_bit_register(struct user *infos, uint8_t tbit, int extended);
 
 t_node	*find_func(void *call, t_ftrace *trace);
+t_node	*find_func_name(char *name, t_ftrace *trace);
+t_func	*create_func_infos(void *addr, char *name, char *binary_name);
 void		destroy_node_func(void *ptr);
 
 void		print_graph(t_ftrace *trace);
