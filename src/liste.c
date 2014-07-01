@@ -53,15 +53,20 @@ void		apply_on_list(t_list *begin,
     }
 }
 
-void	rm_list(t_list *begin, void (*f)(void*))
+void		rm_list(t_list *begin, void (*f)(void*))
 {
+  t_list	*tmp;
+
   if (begin != NULL)
     {
-      if (begin->next != NULL)
-        rm_list(begin->next, f);
-      if (f)
-        (*f)(begin->data);
-      free(begin);
+      while (begin)
+        {
+          if (f)
+            (*f)(begin->data);
+          tmp = begin;
+          begin = begin->next;
+          free(tmp);
+        }
     }
 }
 
