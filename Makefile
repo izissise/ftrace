@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Sat Mar 22 23:04:53 2014 Hugues
+## Last update Thu Jul  3 00:53:28 2014 Hugues
 ##
 
 SRC		=	main.c \
@@ -42,7 +42,7 @@ FILETYPE	=	.c
 
 RM		=	rm -f
 
-NAME		=	ftrace
+NAME		=	trace
 
 OBJDIR		=	obj/
 SRCDIR		=	src/
@@ -50,7 +50,7 @@ INCDIR		=	inc/
 
 CFLAGS		+=	-I$(INCDIR)
 CFLAGS		+=	-Wall -Wextra -Winit-self
-CFLAGS		+=	-Wunused-function -pipe -g
+CFLAGS		+=	-Wunused-function -pipe -O1
 
 LDFLAGS		+=	-Wl,-O1
 

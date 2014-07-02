@@ -59,21 +59,28 @@ inline int	is_ret_opcode(unsigned short opcode)
   return (0);
 }
 
-void	*calc_call(unsigned short opcode, struct user *infos,
-                 pid_t pid, unsigned short extended)
+void		*calc_call(unsigned short opcode, struct user *infos,
+                   pid_t pid, unsigned short extended)
 {
-  char	instr[15];
-  void	*res;
+  char		instr[15];
+  void		*res;
+  int32_t	tmp;
 
   res = NULL;
   if (peek_proc_data_size(pid, (void*)(infos->regs.rip + (extended ? 1 : 0)),
                           instr, sizeof(instr)))
     return (NULL);
   if (!((opcode & 0x00ffU) ^ 0x00e8U))
-    res = (void*)((void*)(infos->regs.rip) + (*((int32_t*)(&instr[1]))) + 5);
+    {
+      tmp = (*((int32_t*)(&instr[1])));
+      res = (void*)((void*)(infos->regs.rip) + tmp + 5);
+    }
   else if (!((opcode & 0x00ffU) ^ 0x00ffU))
     res = call_ff_case(infos, pid, instr, extended);
   else if (!((opcode & 0x00ffU) ^ 0x009aU))
-    res = (void*)((uint64_t)(*((int32_t*)(&instr[1]))) + 7);
+    {
+      tmp = (*((int32_t*)(&instr[1])));
+      res = (void*)((uint64_t)tmp + 7);
+    }
   return (res);
 }

@@ -32,6 +32,7 @@
 # include "tab.h"
 
 # define UNSEDP __attribute__((unused))
+# define MAYALIAS __attribute__((__may_alias__))
 
 # define GRAPHFILENAME "funcgraph.dot"
 

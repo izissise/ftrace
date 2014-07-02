@@ -38,7 +38,6 @@ inline static void	*displacement_value(char instr[15], int *instr_size,
       res = (void*)((int64_t)(*((int32_t*)(&instr[*instr_size]))));
       *instr_size += 4;
     }
-  printf("displacement! %p\n", res);
   return (res);
 }
 
