@@ -13,7 +13,7 @@
 #include "syscall_x86.h"
 
 void			call_instruction(t_ftrace *trace, struct user *infos,
-                           short opcode, int extended)
+                           short opcode, unsigned short extended)
 {
   t_node		*upnode;
   t_node		*node;
@@ -27,7 +27,6 @@ void			call_instruction(t_ftrace *trace, struct user *infos,
       if (upnode)
         link_node(upnode, node);
     }
- // printf("call %p\n", call);
 }
 
 void			syscall_instruction(t_ftrace *trace, struct user *infos)
@@ -54,13 +53,12 @@ int			check_call(t_ftrace * trace)
 {
   struct user		infos;
   unsigned short	opcode;
-  pid_t		pid;
-  int			tmp;
+  unsigned short	tmp;
 
-  pid = trace->pid;
   opcode = 0;
-  if ((ptrace(PTRACE_GETREGS, pid, NULL, &infos) != -1)
-      && (!peek_proc_data(pid, (void*)(infos.regs.rip), (short*)&opcode, 1)))
+  if ((ptrace(PTRACE_GETREGS, trace->pid, NULL, &infos) != -1)
+      && (!peek_proc_data(trace->pid, (void*)(infos.regs.rip),
+                          (short*)&opcode, 1)))
     {
       if (is_syscall(opcode))
         syscall_instruction(trace, &infos);
@@ -68,12 +66,13 @@ int			check_call(t_ftrace * trace)
         rm_from_list(&(trace->func_stack), trace->func_stack, NULL);
       else if ((tmp = is_call_opcode(opcode)))
         {
-          if (tmp == 2)
-            if (!((!peek_proc_data(pid, (void*)(infos.regs.rip + 1),
+          if (tmp != 1)
+            if (!((!peek_proc_data(trace->pid, (void*)(infos.regs.rip + 1),
                                    (short*)&opcode, 1))
                   && is_call_opcode(opcode)))
               return (0);
-          call_instruction(trace, &infos, opcode, (tmp == 2));
+          call_instruction(trace, &infos, opcode,
+                           ((tmp == 1) ? 0 : (tmp & 0x00ffU)));
         }
     }
   return (0);

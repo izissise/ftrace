@@ -22,7 +22,7 @@ inline static void	*deref_reg(struct user *infos, pid_t pid,
   return ((void*)(uint64_t)tmp);
 }
 
-inline static void	*displacement_value(char instr[12], int *instr_size,
+inline static void	*displacement_value(char instr[15], int *instr_size,
                                         uint8_t mod)
 {
   void			*res;
@@ -38,13 +38,11 @@ inline static void	*displacement_value(char instr[12], int *instr_size,
       res = (void*)((int64_t)(*((int32_t*)(&instr[*instr_size]))));
       *instr_size += 4;
     }
-  if (!res)
-    printf("Bad Displacement!\n");
   return (res);
 }
 
 inline void		*call_ff_case(struct user *infos, pid_t pid,
-                            char instr[12], int extended)
+                            char instr[15], unsigned short extended)
 {
   uint8_t			mod;
   uint8_t			reg;
@@ -60,12 +58,17 @@ inline void		*call_ff_case(struct user *infos, pid_t pid,
   if (reg == 0x3U)
     printf("This is Madness !!\n");
   if (mod == 0x3U)
-    res = (void*)three_bit_register(infos, rm + (extended << 3));
+    res = (void*)three_bit_register(infos, rm + ((extended ? 1 : 0) << 3));
   else
     {
       instr_size += ((rm == 0x4U) || (rm == 0x5U));
       res = (void*)((int64_t)displacement_value(instr, &instr_size, mod));
-      res = deref_reg(infos, pid, rm + (extended << 3 ), res);
+      if (rm == 0x4U)
+        printf("instr4: %lx\n", (uint64_t)instr);
+      else if (rm == 0x5U)
+        printf("instr4: %lx\n", (uint64_t)instr);
+      else
+        res = deref_reg(infos, pid, rm + ((extended ? 1 : 0) << 3), res);
     }
   return (res);
 }

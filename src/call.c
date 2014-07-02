@@ -15,7 +15,7 @@
 ** 9a Xx call
 ** ff /2 Xx call
 ** ff /3 Xx call
-** 41 extend for register in x86_x64
+** 4X extend for register in x86_x64 (REX prefix)
 */
 
 inline int	is_call_opcode(unsigned short opcode)
@@ -25,8 +25,8 @@ inline int	is_call_opcode(unsigned short opcode)
   if (!((opcode & 0x00ffU) ^ 0x00e8U)
       || !((opcode & 0x00ffU) ^ 0x009aU))
     return (1);
-  if (opcode == 0xff41)
-    return (2);
+  if (!((opcode & 0xfff0U) ^ 0xff40U))
+    return ((int)opcode);
   if (!((opcode & 0x00ffU) ^ 0x00ffU))
     {
       modbyte = ((opcode & 0xff00U) >> 8);
@@ -60,13 +60,13 @@ inline int	is_ret_opcode(unsigned short opcode)
 }
 
 void	*calc_call(unsigned short opcode, struct user *infos,
-                 pid_t pid, int extended)
+                 pid_t pid, unsigned short extended)
 {
-  char	instr[12];
+  char	instr[15];
   void	*res;
 
   res = NULL;
-  if (peek_proc_data_size(pid, (void*)(infos->regs.rip + extended),
+  if (peek_proc_data_size(pid, (void*)(infos->regs.rip + (extended ? 1 : 0)),
                           instr, sizeof(instr)))
     return (NULL);
   if (!((opcode & 0x00ffU) ^ 0x00e8U))
