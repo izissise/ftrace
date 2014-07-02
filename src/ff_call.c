@@ -55,7 +55,7 @@ inline void		*call_ff_case(struct user *infos, pid_t pid,
                             char instr[15], unsigned short extended)
 {
   uint8_t			mod;
-  uint8_t			reg;
+  UNUSED uint8_t		reg;
   uint8_t			rm;
   void				*res;
   int			instr_size;
@@ -65,8 +65,6 @@ inline void		*call_ff_case(struct user *infos, pid_t pid,
   mod = ((((*((unsigned short*)instr)) & 0xff00U) >> 8) >> 6) & 0x3U;
   reg = ((((*((unsigned short*)instr)) & 0xff00U) >> 8) >> 3) & 0x7U;
   rm = ((((*((unsigned short*)instr)) & 0xff00U) >> 8)) & 0x7U;
-  if (reg == 0x3U)
-    printf("This is Madness !!\n");
   if (mod == 0x3U)
     res = (void*)three_bit_register(infos, rm + ((extended ? 1 : 0) << 3));
   else
@@ -75,7 +73,10 @@ inline void		*call_ff_case(struct user *infos, pid_t pid,
       res = (void*)((int64_t)displacement_value(instr, &instr_size, mod));
       if ((rm == 0x4U) && ((uint8_t)instr[2] != 0x24U))
         res = sib_byte(infos, pid, instr, extended);
-      else if (!((rm == 0x5U) && (mod == 0x0U)))
+      else if ((rm == 0x5U) && (mod == 0x0U))
+        res = (void*)((void*)(infos->regs.rip) + (uint64_t)res
+                      + instr_size + (extended ? 1 : 0));
+      else
         res = deref_reg(infos, pid, rm + ((extended ? 1 : 0) << 3), res);
     }
   return (res);
