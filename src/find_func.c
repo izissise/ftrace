@@ -33,6 +33,8 @@ t_node	*find_func(void *call, t_ftrace *trace)
   t_node	*res;
   t_func	*func;
 
+  if (!call)
+    return (NULL);
   res = find_node_func_f_list(trace->func_list, call);
   if (res)
     return (res);

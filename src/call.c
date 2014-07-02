@@ -25,8 +25,6 @@ inline int	is_call_opcode(unsigned short opcode)
   if (!((opcode & 0x00ffU) ^ 0x00e8U)
       || !((opcode & 0x00ffU) ^ 0x009aU))
     return (1);
-  if (!((opcode & 0xfff0U) ^ 0xff40U))
-    return ((int)opcode);
   if (!((opcode & 0x00ffU) ^ 0x00ffU))
     {
       modbyte = ((opcode & 0xff00U) >> 8);
@@ -34,6 +32,8 @@ inline int	is_call_opcode(unsigned short opcode)
           || !(((modbyte >> 3) & 0x7U) ^ 0x3U))
         return (1);
     }
+  if (!((opcode & 0xfff0U) ^ 0xff40U))
+    return ((int)opcode);
   return (0);
 }
 

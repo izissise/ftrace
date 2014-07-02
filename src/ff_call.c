@@ -38,7 +38,18 @@ inline static void	*displacement_value(char instr[15], int *instr_size,
       res = (void*)((int64_t)(*((int32_t*)(&instr[*instr_size]))));
       *instr_size += 4;
     }
+  printf("displacement! %p\n", res);
   return (res);
+}
+
+inline void		*sib_byte(struct user *infos, pid_t pid,
+                        char instr[15], unsigned short extended)
+{
+  (void)infos;
+  (void)pid;
+  (void)instr;
+  (void)extended;
+  return (NULL);
 }
 
 inline void		*call_ff_case(struct user *infos, pid_t pid,
@@ -61,13 +72,11 @@ inline void		*call_ff_case(struct user *infos, pid_t pid,
     res = (void*)three_bit_register(infos, rm + ((extended ? 1 : 0) << 3));
   else
     {
-      instr_size += ((rm == 0x4U) || (rm == 0x5U));
+      instr_size += ((rm == 0x4U) ? 1 : 0);
       res = (void*)((int64_t)displacement_value(instr, &instr_size, mod));
-      if (rm == 0x4U)
-        printf("instr4: %lx\n", (uint64_t)instr);
-      else if (rm == 0x5U)
-        printf("instr4: %lx\n", (uint64_t)instr);
-      else
+      if ((rm == 0x4U) && ((uint8_t)instr[2] != 0x24U))
+        res = sib_byte(infos, pid, instr, extended);
+      else if (!((rm == 0x5U) && (mod == 0x0U)))
         res = deref_reg(infos, pid, rm + ((extended ? 1 : 0) << 3), res);
     }
   return (res);

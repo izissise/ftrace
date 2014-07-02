@@ -21,12 +21,11 @@ void			call_instruction(t_ftrace *trace, struct user *infos,
 
   call = calc_call(opcode, infos, trace->pid, extended);
   upnode = trace->func_stack ? (t_node*)(trace->func_stack->data) : NULL;
-  if (call && (node = find_func(call, trace)))
-    {
-      add_to_list_top(&(trace->func_stack), node);
-      if (upnode)
-        link_node(upnode, node);
-    }
+  node = find_func(call, trace);
+  add_to_list_top(&(trace->func_stack), node);
+  if (upnode && node)
+    link_node(upnode, node);
+  printf("call %p\n", call);
 }
 
 void			syscall_instruction(t_ftrace *trace, struct user *infos)
