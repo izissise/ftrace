@@ -21,7 +21,7 @@ int		print_func_info(void *ptr1, void *ptr2)
   if (!n || !(func = (t_func*)n->data))
     return (1);
   if (func->addr == (void*)0x1U)
-    dprintf(fd, "\t\"%s%lu\" [label=\"%s\"];\n", func->name,
+    dprintf(fd, "\t\"%s%lu\" [label=\"%s\" color=blue];\n", func->name,
             (uint64_t)func->addr, func->name);
   else
     dprintf(fd, "\t\"%s%lu\" [label=\"%s_%p@%s\"];\n", func->name,
@@ -45,9 +45,8 @@ int		print_func_graph(void *ptr1, void *ptr2)
   while (n->tab[i])
     {
       if ((tmp = (t_func*)((n->tab[i])->data)))
-        dprintf(fd, "\t\"%s%lu\" -> \"%s%lu\";\n",
-                func->name, (uint64_t)func->addr,
-                tmp->name, (uint64_t)tmp->addr);
+        dprintf(fd, "\t\"%s%lu\" -> \"%s%lu\";\n", func->name,
+                (uint64_t)func->addr, tmp->name, (uint64_t)tmp->addr);
       i++;
     }
   return (0);
@@ -61,7 +60,7 @@ void		print_graph(t_ftrace *trace)
   snprintf(filename, sizeof(filename), GRAPHFILENAME);
   if ((fd = open(filename, O_TRUNC | O_CREAT | O_WRONLY, 0666)) == -1)
     return ;
-  dprintf(fd, "digraph a {\n");
+  dprintf(fd, "digraph a {\n\tsize=\"1,1\";\n");
   apply_on_list(trace->func_list, &print_func_info, &fd);
   apply_on_list(trace->func_list, &print_func_graph, &fd);
   dprintf(fd, "}\n");

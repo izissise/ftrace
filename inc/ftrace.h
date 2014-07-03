@@ -39,20 +39,20 @@
 typedef struct		s_ftrace
 {
   pid_t			pid;
-  t_elf			elf;
-  t_file			file;
+  t_elf			**elf;
+  t_file			**file;
   int			forked;
   int			quit;
   int			sizetable;
   t_syscall_info	*systable;
-  void			**symbols_list;
+  t_func			**symbols_tab;
   const char		*symstr;
   t_list			*func_list;
   t_list			*func_stack;
 }			t_ftrace;
 
 char	*prog_full_path(char *prog);
-void	trace_pid(t_ftrace *trace);
+void	trace_pid(t_ftrace *trace, t_elf *elf);
 int	peek_proc_data(pid_t pid, void *addr, short *res, int verbose);
 int	peek_proc_data_size(pid_t pid, void *addr, char *res, int size);
 int	check_status(pid_t pid);
@@ -70,9 +70,11 @@ uint64_t	three_bit_register(struct user *infos, uint8_t tbit);
 
 t_node	*find_func(void *call, t_ftrace *trace);
 t_node	*find_func_name(char *name, t_ftrace *trace);
+t_func	*find_symbols_by_addr(t_func **sym_tab, void *addr);
 t_func	*create_func_infos(void *addr, char *name, char *binary_name);
 void		destroy_node_func(void *ptr);
 
+void		resolve_symbol(t_ftrace *trace);
 void		print_graph(t_ftrace *trace);
 
 #endif /* !FTRACE_H_INCLUDED */

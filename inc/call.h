@@ -18,7 +18,7 @@ typedef struct	s_func
   char		*binary_name;
 }		t_func;
 
-t_func	*func_info(void *addr, t_ftrace *trace);
+t_func	*create_func_infos(void *addr, char *name, char *binary_name);
 void		free_info(t_func *func);
 
 #endif /* !CALL_H_INCLUDED */

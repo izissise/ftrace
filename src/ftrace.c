@@ -89,12 +89,10 @@ int	check_status(pid_t pid)
   return (0);
 }
 
-void	trace_pid(t_ftrace * trace)
+void	trace_pid(t_ftrace *trace, t_elf *elf)
 {
   pid_t	pid;
-  t_elf	*elf;
 
-  elf = &(trace->elf);
   pid = trace->pid;
   trace->systable = IS_32(1, 0) ? g_syscall_x86_x64 : g_syscall_x86;
   trace->sizetable = (IS_32(1, 0) ? sizeof(g_syscall_x86_x64)

@@ -37,10 +37,7 @@ pid_t	ptrace_exec(char *program, char **av, char **envp, t_ftrace *trace)
     {
       if ((ptrace(PTRACE_TRACEME, child, NULL, NULL) == -1)
           || (raise(SIGSTOP)) || (execve(path, av, envp) == -1))
-        {
-          perror(program);
-          exit(1);
-        }
+        perror(program);
       exit(1);
     }
   if (load_elf(path, trace))
@@ -77,7 +74,9 @@ void	free_stuff(t_ftrace *trace)
 {
   rm_list(trace->func_list, &destroy_node_func);
   rm_list(trace->func_stack, NULL);
-  free(trace->symbols_list);
+  free_ptr_tab((void**)trace->symbols_tab, (void*)&free_info);
+  free_ptr_tab((void**)trace->elf, &free);
+  free_ptr_tab((void**)trace->file, (void*)&close_file);
   trace->func_list = NULL;
 }
 
@@ -93,16 +92,17 @@ int		main(int ac, char **av, char **envp)
     trace.pid = ptrace_exec(av[1], &(av[1]), envp, &trace);
   else
     fprintf(stderr, "USAGE : %s [-p PID] | program name\n", av[0]);
-  if (trace.pid > 0)
+  if (trace.pid > 0 && trace.elf && trace.file
+      && trace.elf[0] && trace.file[0])
     {
       if (!trace.forked)
         signal(SIGINT, &sig_handler);
-      trace_pid(&trace);
+      trace_pid(&trace, trace.elf[0]);
+      resolve_symbol(&trace);
       print_graph(&trace);
-      free_stuff(&trace);
     }
   else
     return (1);
-  close_file(&(trace.file));
+  free_stuff(&trace);
   return (0);
 }

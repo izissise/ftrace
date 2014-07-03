@@ -39,7 +39,8 @@ t_node	*find_func(void *call, t_ftrace *trace)
   if (res)
     return (res);
   if (((res = create_node(NULL)) == NULL)
-      || ((func = func_info(call, trace)) == NULL))
+      || ((func = create_func_infos(call, "func",
+                                    trace->file[0]->name)) == NULL))
     {
       free(res);
       return (NULL);
@@ -78,7 +79,8 @@ t_node	*find_func_name(char *name, t_ftrace *trace)
     return (res);
   if ((res = create_node(NULL)) == NULL)
     return (NULL);
-  if ((func = create_func_infos((void*)0x1U, name, trace->file.name)) == NULL)
+  if ((func = create_func_infos((void*)0x1U, name,
+                                trace->file[0]->name)) == NULL)
     {
       free(res);
       return (NULL);

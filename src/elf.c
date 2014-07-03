@@ -56,24 +56,58 @@ int	init_elf(t_elf *elf, t_file *file)
   return (0);
 }
 
-int	load_elf(char *path, t_ftrace *trace)
+void		resolve_elf_static_symbol(t_ftrace *trace, t_elf *elf, t_file *file)
 {
-  int	sym;
-  char	*symstr;
+  int		sym;
+  char		*symstr;
+  void		**rawsym;
+  int		i;
+  t_func	*tmp;
+  char		*name;
 
-  if ((open_file(&(trace->file), path, O_RDONLY, 0) == -1)
-      || check_valid_elf(&(trace->file))
-      || init_elf(&(trace->elf), &(trace->file))
-      || trace->elf.check_elf_size(trace->elf.elf, &(trace->file)))
-    return (1);
-  trace->elf.elf = trace->file.data;
-  if (((sym = find_section(&trace->elf, ".symtab", 0, &(trace->file))) != -1)
-      && ((symstr = trace->elf.symbols_str(trace->elf.elf, sym,
-                    &(trace->file))) != NULL))
+  i = 0;
+  if (((sym = find_section(elf, ".symtab", 0, file)) != -1)
+      && ((symstr = elf->symbols_str(elf->elf, sym, file)) != NULL))
     {
-      trace->symstr = symstr;
-      trace->symbols_list = list_symbols(&(trace->elf), sym, &(trace->file));
+      if ((rawsym = list_symbols(elf, sym, file)))
+        while (rawsym[i] && ((tmp = malloc(sizeof(t_func))) != NULL))
+          {
+            tmp->addr = elf->symbol_addr(rawsym[i], file);
+            tmp->binary_name = strdup(file->name);
+            name = elf->symbol_name(rawsym[i], symstr, file);
+            tmp->name = strdup(name ? name : "func");
+            trace->symbols_tab = (t_func**)add_ptr_t_tab(
+                                   (void**)trace->symbols_tab,
+                                   (void*)tmp);
+            i++;
+          }
+      free(rawsym);
     }
-  return (0);
 }
 
+int		load_elf(char *path, t_ftrace *trace)
+{
+  t_elf	*elf;
+  t_file	*file;
+
+  if (((elf = malloc(sizeof(t_elf))) == NULL)
+      || ((file = malloc(sizeof(t_file))) == NULL))
+    {
+      free(elf);
+      return (1);
+    }
+  if ((open_file(file, path, O_RDONLY, 0) == -1)
+      || check_valid_elf(file)
+      || init_elf(elf, file)
+      || elf->check_elf_size(elf->elf, file))
+    {
+      free(elf);
+      close_file(file);
+      return (1);
+    }
+  elf->elf = file->data;
+  trace->elf = (t_elf**)add_ptr_t_tab((void**)trace->elf, (void*)elf);
+  trace->file = (t_file**)add_ptr_t_tab((void**)trace->file, (void*)file);
+  resolve_elf_static_symbol(trace, elf, file);
+  return (0);
+}

@@ -16,7 +16,9 @@
 # include <string.h>
 # include <ctype.h>
 # include <elf.h>
+
 # include "file.h"
+# include "tab.h"
 
 # define IS_32(x, y) ((elf->type == ELFCLASS32) ? (void*)(x) : (void*)(y))
 # define ABS(x) ((x < 0) ? -(x) : (x))
@@ -50,8 +52,6 @@ int		find_section(t_elf *elf, const char *section,
 int		find_section_type(t_elf *elf, uint32_t type,
                         int start, t_file *file);
 void		**list_symbols(t_elf *elf, int sh, t_file *file);
-int		find_symbols_by_addr(t_elf *elf, void **symlist,
-                           void *addr, t_file *file);
 
 void		*get_section_table64(Elf64_Ehdr *elf, t_file *file);
 int		check_elf_size64(Elf64_Ehdr *elf, t_file *file);

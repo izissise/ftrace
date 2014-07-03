@@ -24,7 +24,8 @@ void		**list_symbols(t_elf *elf, int sh, t_file *file)
     return (NULL);
   i = 0;
   symsize = (elf->type == ELFCLASS32) ? sizeof(Elf32_Sym) : sizeof(Elf64_Sym);
-  if ((res = malloc(((size / symsize) + 1) * sizeof(void*))) == NULL)
+  if ((res = malloc(((size / symsize) + 1 + PTRT_PACK)
+                    * (sizeof(void*)))) == NULL)
     return (NULL);
   while ((size_t)(symsize * i) < size)
     {
@@ -33,21 +34,4 @@ void		**list_symbols(t_elf *elf, int sh, t_file *file)
     }
   res[i] = NULL;
   return (res);
-}
-
-int		find_symbols_by_addr(t_elf *elf, void **symlist,
-                           void *addr, t_file *file)
-{
-  int		i;
-
-  if (!symlist)
-    return (-1);
-  i = 0;
-  while (symlist[i])
-    {
-      if (elf->symbol_addr(symlist[i], file) == addr)
-        return (i);
-      i++;
-    }
-  return (-1);
 }

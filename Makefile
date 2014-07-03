@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Thu Jul  3 00:53:28 2014 Hugues
+## Last update Thu Jul  3 15:33:38 2014 Hugues
 ##
 
 SRC		=	main.c \
@@ -35,6 +35,7 @@ SRC		=	main.c \
 			symbols_search.c \
 			func_name.c \
 			find_func.c \
+			symbol_resolver.c \
 			dotty.c
 
 CC		=	gcc
@@ -50,7 +51,7 @@ INCDIR		=	inc/
 
 CFLAGS		+=	-I$(INCDIR)
 CFLAGS		+=	-Wall -Wextra -Winit-self
-CFLAGS		+=	-Wunused-function -pipe -O1
+CFLAGS		+=	-Wunused-function -pipe -g
 
 LDFLAGS		+=	-Wl,-O1
 
