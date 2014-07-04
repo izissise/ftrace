@@ -83,6 +83,24 @@ void		resolve_elf_static_symbol(t_ftrace *trace, t_elf *elf, t_file *file)
           }
       free(rawsym);
     }
+  if ((sym = find_section(elf, ".dynsym", 0, file)) != -1)
+    {
+      printf("%s: offset: %ld, size: %ld, addr: 0x%lx, type: 0x%lx\n",
+             elf->sh_section_name(elf->elf, sym, file),
+             elf->sh_offset(elf->elf, sym, file),
+             elf->sh_size(elf->elf, sym, file),
+             elf->sh_addr(elf->elf, sym, file),
+             elf->sh_type(elf->elf, sym, file));
+    }
+  if ((sym = find_section(elf, ".plt", 0, file)) != -1)
+    {
+      printf("%s: offset: %ld, size: %ld, addr: 0x%lx, type: 0x%lx\n",
+             elf->sh_section_name(elf->elf, sym, file),
+             elf->sh_offset(elf->elf, sym, file),
+             elf->sh_size(elf->elf, sym, file),
+             elf->sh_addr(elf->elf, sym, file),
+             elf->sh_type(elf->elf, sym, file));
+    }
 }
 
 int		load_elf(char *path, t_ftrace *trace)

@@ -35,24 +35,27 @@ int		place_symbol_in_graph(void *p1, void *p2)
   t_func	*func;
   t_func	*res;
 
-  n = (t_node*)p1;
-  func = (t_func*)n->data;
-  trace = (t_ftrace*)p2;
+  if (!(n = (t_node*)p1) || !(func = (t_func*)n->data)
+      || !(trace = (t_ftrace*)p2))
+    return (1);
   if ((res = find_symbols_by_addr(trace->symbols_tab, func->addr)))
     {
       free(func->name);
       free(func->binary_name);
-      printf("\033[0;34m""\tFound symbol for "
-             "\033[0;35m""%p""\033[0;30m"": "
-             "\033[0;32m""%s""\033[0;30m""\n", res->addr, res->name);
       func->name = strdup(res->name);
       func->binary_name = strdup(res->binary_name);
+      printf("\033[0;34m""\tFound symbol for "
+             "\033[0;35m""%p""\033[0;30m"": "
+             "\033[0;32m""%s""\033[0;30m""\n", func->addr, func->name);
     }
+  else
+    printf("\033[0;34m""\tNo symbol found for "
+           "\033[0;37m""%p""\033[0;30m""\n", func->addr);
   return (0);
 }
 
 void	resolve_symbol(t_ftrace *trace)
 {
-  printf("\033[0;31m""Resolving function symbols !""\033[0;0m""\n");
+  printf("\n\033[0;31m""Resolving function symbols !""\033[0;0m""\n");
   apply_on_list(trace->func_list, &place_symbol_in_graph, trace);
 }
