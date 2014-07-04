@@ -32,7 +32,7 @@ inline int	peek_proc_data_size(pid_t pid, void *addr, char *res, int size)
   i = 0;
   while (i < size)
     {
-      if (peek_proc_data(pid, addr + i, &tmp, 0))
+      if (peek_proc_data(pid, (void*)((uint64_t)addr + i), &tmp, 0))
         return (1);
       res[i] = tmp;
       i++;

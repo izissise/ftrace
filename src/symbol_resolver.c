@@ -15,7 +15,6 @@ t_func	*find_symbols_by_addr(t_func **sym_tab, void *addr)
   int		i;
   t_func		*tmp;
 
-  printf("%p\n", addr);
   if (!sym_tab)
     return (NULL);
   i = 0;

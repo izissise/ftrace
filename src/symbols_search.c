@@ -29,7 +29,7 @@ void		**list_symbols(t_elf *elf, int sh, t_file *file)
     return (NULL);
   while ((size_t)(symsize * i) < size)
     {
-      res[i] = sect + (symsize * i);
+      res[i] = (void*)((uint64_t)sect + (symsize * i));
       i++;
     }
   res[i] = NULL;

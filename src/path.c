@@ -54,25 +54,26 @@ char	*exec_full_path(char *exec, char **paths)
 char	**path_to_tab(char *path)
 {
   char	**res;
+  char	**tmpptr;
   int	nbpaths;
   char	*tmp;
 
   if (!path)
     return (NULL);
   res = NULL;
-  nbpaths = 0;
-  if ((tmp = strtok(path, ":")))
-    {
-      nbpaths++;
-      res = realloc(res, (nbpaths + 1) * sizeof(char*));
-      res[nbpaths - 1] = tmp;
-    }
+  nbpaths = 1;
+  if (((tmp = strtok(path, ":")))
+      && ((res = realloc(res, (nbpaths + 1) * sizeof(char*)))))
+    res[nbpaths - 1] = tmp;
   while (tmp != NULL)
     {
       nbpaths++;
-      res = realloc(res, (nbpaths + 1) * sizeof(char*));
       tmp = strtok(NULL, ":");
-      res[nbpaths - 1] = tmp;
+      if ((tmpptr = realloc(res, (nbpaths + 1) * sizeof(char*))))
+        {
+          res = tmpptr;
+          res[nbpaths - 1] = tmp;
+        }
     }
   if (res)
     res[nbpaths] = NULL;
