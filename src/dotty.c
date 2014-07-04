@@ -57,6 +57,7 @@ void		print_graph(t_ftrace *trace)
   char		filename[BUFSIZ];
   int		fd;
 
+  printf("\033[0;31m""Generating graph !!""\033[0;0m""\n");
   snprintf(filename, sizeof(filename), GRAPHFILENAME);
   if ((fd = open(filename, O_TRUNC | O_CREAT | O_WRONLY, 0666)) == -1)
     return ;

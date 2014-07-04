@@ -76,16 +76,17 @@ int			check_call(t_ftrace * trace)
   return (0);
 }
 
-int	check_status(pid_t pid)
+int		check_status(pid_t pid)
 {
-  int	status;
+  siginfo_t	status;
 
-  if (waitpid(pid, &status, WUNTRACED) == -1)
-    return (1);
-  if (WIFEXITED(status))
+  if (waitid(P_PID, pid, &status, WSTOPPED | WCONTINUED | WEXITED) == -1)
     {
+      perror("wait");
       return (1);
     }
+  if ((status.si_code == CLD_EXITED) || (status.si_code == CLD_KILLED))
+    return (1);
   return (0);
 }
 
@@ -103,6 +104,4 @@ void	trace_pid(t_ftrace *trace, t_elf *elf)
         if (ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL) == -1)
           perror("ptrace");
     }
-  if (!trace->forked)
-    ptrace(PTRACE_DETACH, pid, NULL, NULL);
 }

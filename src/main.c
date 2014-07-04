@@ -72,6 +72,8 @@ pid_t	ptrace_attach(pid_t pid, t_ftrace *trace)
 
 void	free_stuff(t_ftrace *trace)
 {
+  if (!trace->forked)
+    ptrace(PTRACE_DETACH, trace->pid, NULL, NULL);
   rm_list(trace->func_list, &destroy_node_func);
   rm_list(trace->func_stack, NULL);
   free_ptr_tab((void**)trace->symbols_tab, (void*)&free_info);

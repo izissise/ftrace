@@ -42,6 +42,9 @@ int		place_symbol_in_graph(void *p1, void *p2)
     {
       free(func->name);
       free(func->binary_name);
+      printf("\033[0;34m""\tFound symbol for "
+             "\033[0;35m""%p""\033[0;30m"": "
+             "\033[0;32m""%s""\033[0;30m""\n", res->addr, res->name);
       func->name = strdup(res->name);
       func->binary_name = strdup(res->binary_name);
     }
@@ -50,5 +53,6 @@ int		place_symbol_in_graph(void *p1, void *p2)
 
 void	resolve_symbol(t_ftrace *trace)
 {
+  printf("\033[0;31m""Resolving function symbols !""\033[0;0m""\n");
   apply_on_list(trace->func_list, &place_symbol_in_graph, trace);
 }
