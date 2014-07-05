@@ -23,9 +23,12 @@ int		print_func_info(void *ptr1, void *ptr2)
   if (func->addr == (void*)0x1U)
     dprintf(fd, "\t\"%s%lu\" [label=\"%s\" color=blue];\n", func->name,
             (uint64_t)func->addr, func->name);
-  else
+  else if (!strcmp(func->name, "func"))
     dprintf(fd, "\t\"%s%lu\" [label=\"%s_%p@%s\"];\n", func->name,
             (uint64_t)func->addr, func->name, func->addr, func->binary_name);
+  else
+    dprintf(fd, "\t\"%s%lu\" [label=\"%s@%s\"];\n", func->name,
+            (uint64_t)func->addr, func->name, func->binary_name);
   return (0);
 }
 

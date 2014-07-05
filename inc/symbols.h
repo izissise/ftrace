@@ -54,6 +54,10 @@ int		find_section_type(t_elf *elf, uint32_t type,
                         int start, t_file *file);
 void		**list_symbols(t_elf *elf, int sh, t_file *file, size_t strucsize);
 
+int		relocation_type(void *rela, t_elf *elf);
+int		relocation_info(void *rela, t_elf *elf);
+void		*relocation_addr(void *rela, t_elf *elf);
+
 void		*get_section_table64(Elf64_Ehdr *elf, t_file *file);
 int		check_elf_size64(Elf64_Ehdr *elf, t_file *file);
 size_t		section_number64(Elf64_Ehdr *elf);

@@ -36,6 +36,7 @@ SRC		=	main.c \
 			func_name.c \
 			find_func.c \
 			symbol_resolver.c \
+			relocation.c \
 			elf_dynamic_symbols.c \
 			dotty.c
 
