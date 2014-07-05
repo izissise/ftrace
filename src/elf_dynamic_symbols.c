@@ -38,7 +38,26 @@ char		**elf_dyna_symb_tab(t_elf *elf, t_file *file)
   return (res);
 }
 
-void		resolve_elf_dynamic_symbol(UNUSED t_ftrace *trace,
+t_func		*fill_tab_dyna_symbol(void *realocsym, char **rawsym,
+                                void *pltraddr, t_elf *elf)
+{
+  int		rela;
+  t_func		*tmp;
+  char		*name;
+
+  rela = relocation_info(realocsym, elf);
+  if ((tmp = malloc(sizeof(t_func))))
+    {
+      name = rawsym[relocation_info(realocsym, elf)];
+      tmp->addr = (void*)((size_t)pltraddr + (rela * 0x10));
+      tmp->name = strdup(name ? name : "func");
+      // printf("name: %s, addr: %p\n", tmp->name, tmp->addr);
+      return (tmp);
+    }
+  return (NULL);
+}
+
+void		resolve_elf_dynamic_symbol(t_ftrace *trace,
                                    t_elf *elf, t_file *file)
 {
   int		rela;
@@ -47,36 +66,27 @@ void		resolve_elf_dynamic_symbol(UNUSED t_ftrace *trace,
   void		*pltraddr;
   int		i;
   int		rawsize;
-  t_func	*tmp;
-  char		*name;
+  t_func		*tmp;
 
   pltraddr = NULL;
   if ((rela = find_section(elf, ".plt", 0, file)) != -1)
     pltraddr = (void*)elf->sh_addr(elf->elf, rela, file);
-  i = 0;
+  i = -1;
   rawsym = elf_dyna_symb_tab(elf, file);
   if (((rela = find_section(elf, ".rela.plt", 0, file)) != -1) && rawsym)
     {
       rawsize = ptr_tab_size((void**)rawsym);
       if ((realocsym = list_symbols(elf, rela, file, (IS_32(1, 0) ?
                                     sizeof(Elf32_Rel) : sizeof(Elf64_Rel)))))
-        while (realocsym[i])
-          {
-            rela = relocation_info(realocsym[i], elf);
-            if ((1/*relocation_type(realocsym[i], elf) == R_386_JMP_SLOT*/)
-                && (rela < rawsize && rela >= 0)
-                && ((tmp = malloc(sizeof(t_func)))))
-              {
-                name = rawsym[relocation_info(realocsym[i], elf)];
-                tmp->addr = (void*)((size_t)pltraddr + (rela * 0x10)); /* Add .plt address + rela * 0x10 */
-                tmp->binary_name = strdup(file->name);
-                tmp->name = strdup(name ? name : "func");
-               // printf("name: %s, addr: %p\n", tmp->name, tmp->addr);
-                trace->symbols_tab = (t_func**)add_ptr_t_tab(
-                                       (void**)trace->symbols_tab, (void*)tmp);
-              }
-            i++;
-          }
+        while (realocsym[++i])
+          if ((rela = relocation_info(realocsym[i], elf)) < rawsize
+              && rela >= 0 && (tmp = fill_tab_dyna_symbol(realocsym[i], rawsym,
+                                     pltraddr, elf)))
+            {
+              tmp->binary_name = strdup(file->name);
+              trace->symbols_tab = (t_func**)add_ptr_t_tab(
+                                     (void**)trace->symbols_tab, (void*)tmp);
+            }
     }
   free(realocsym);
   free(rawsym);
