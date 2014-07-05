@@ -10,7 +10,7 @@
 
 #include "symbols.h"
 
-void		**list_symbols(t_elf *elf, int sh, t_file *file)
+void		**list_symbols(t_elf *elf, int sh, t_file *file, size_t strusize)
 {
   void		**res;
   void		*sect;
@@ -23,7 +23,7 @@ void		**list_symbols(t_elf *elf, int sh, t_file *file)
   if ((sect == file->data) || (size == 0))
     return (NULL);
   i = 0;
-  symsize = (elf->type == ELFCLASS32) ? sizeof(Elf32_Sym) : sizeof(Elf64_Sym);
+  symsize = strusize;
   if ((res = malloc(((size / symsize) + 1 + PTRT_PACK)
                     * (sizeof(void*)))) == NULL)
     return (NULL);

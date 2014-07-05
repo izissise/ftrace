@@ -42,5 +42,6 @@ int	check_elf_size64(Elf64_Ehdr *elf, t_file *file)
       i++;
     }
   size += elf->e_phnum * elf->e_phentsize;
+  size += elf->e_shnum * elf->e_shentsize;
   return (0);
 }

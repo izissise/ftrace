@@ -16,6 +16,7 @@
 # include <string.h>
 # include <ctype.h>
 # include <elf.h>
+# include <link.h>
 
 # include "file.h"
 # include "tab.h"
@@ -51,7 +52,7 @@ int		find_section(t_elf *elf, const char *section,
                    int start, t_file *file);
 int		find_section_type(t_elf *elf, uint32_t type,
                         int start, t_file *file);
-void		**list_symbols(t_elf *elf, int sh, t_file *file);
+void		**list_symbols(t_elf *elf, int sh, t_file *file, size_t strucsize);
 
 void		*get_section_table64(Elf64_Ehdr *elf, t_file *file);
 int		check_elf_size64(Elf64_Ehdr *elf, t_file *file);

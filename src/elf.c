@@ -69,7 +69,8 @@ void		resolve_elf_static_symbol(t_ftrace *trace, t_elf *elf, t_file *file)
   if (((sym = find_section(elf, ".symtab", 0, file)) != -1)
       && ((symstr = elf->symbols_str(elf->elf, sym, file)) != NULL))
     {
-      if ((rawsym = list_symbols(elf, sym, file)))
+      if ((rawsym = list_symbols(elf, sym, file, (IS_32(1, 0) ?
+                                 sizeof(Elf32_Sym) : sizeof(Elf64_Sym)))))
         while (rawsym[i] && ((tmp = malloc(sizeof(t_func))) != NULL))
           {
             tmp->addr = elf->symbol_addr(rawsym[i], file);
@@ -77,29 +78,10 @@ void		resolve_elf_static_symbol(t_ftrace *trace, t_elf *elf, t_file *file)
             name = elf->symbol_name(rawsym[i], symstr, file);
             tmp->name = strdup(name ? name : "func");
             trace->symbols_tab = (t_func**)add_ptr_t_tab(
-                                   (void**)trace->symbols_tab,
-                                   (void*)tmp);
+                                   (void**)trace->symbols_tab, (void*)tmp);
             i++;
           }
       free(rawsym);
-    }
-  if ((sym = find_section(elf, ".dynsym", 0, file)) != -1)
-    {
-      printf("%s: offset: %ld, size: %ld, addr: 0x%lx, type: 0x%lx\n",
-             elf->sh_section_name(elf->elf, sym, file),
-             elf->sh_offset(elf->elf, sym, file),
-             elf->sh_size(elf->elf, sym, file),
-             elf->sh_addr(elf->elf, sym, file),
-             elf->sh_type(elf->elf, sym, file));
-    }
-  if ((sym = find_section(elf, ".plt", 0, file)) != -1)
-    {
-      printf("%s: offset: %ld, size: %ld, addr: 0x%lx, type: 0x%lx\n",
-             elf->sh_section_name(elf->elf, sym, file),
-             elf->sh_offset(elf->elf, sym, file),
-             elf->sh_size(elf->elf, sym, file),
-             elf->sh_addr(elf->elf, sym, file),
-             elf->sh_type(elf->elf, sym, file));
     }
 }
 
@@ -127,5 +109,7 @@ int		load_elf(char *path, t_ftrace *trace)
   trace->elf = (t_elf**)add_ptr_t_tab((void**)trace->elf, (void*)elf);
   trace->file = (t_file**)add_ptr_t_tab((void**)trace->file, (void*)file);
   resolve_elf_static_symbol(trace, elf, file);
+  resolve_elf_dynamic_symbol(trace, elf, file);
+  //load dependent libs
   return (0);
 }

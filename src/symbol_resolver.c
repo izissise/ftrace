@@ -36,7 +36,7 @@ int		place_symbol_in_graph(void *p1, void *p2)
   t_func	*res;
 
   if (!(n = (t_node*)p1) || !(func = (t_func*)n->data)
-      || !(trace = (t_ftrace*)p2))
+      || !(trace = (t_ftrace*)p2) || (func->addr == (void*)0x1U))
     return (1);
   if ((res = find_symbols_by_addr(trace->symbols_tab, func->addr)))
     {

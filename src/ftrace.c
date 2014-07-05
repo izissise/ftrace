@@ -42,7 +42,7 @@ void			syscall_instruction(t_ftrace *trace, struct user *infos)
   if ((node = find_func_name(name, trace)))
     {
       add_to_list_top(&(trace->func_stack), node);
-      if (upnode)
+      if (upnode && node)
         link_node(upnode, node);
     }
 }
