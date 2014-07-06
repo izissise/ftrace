@@ -34,7 +34,7 @@ void			parse_lib_maps(t_ftrace *trace)
              &start, &end, &perm, &perm, &perm, &perm,
              &pop, &jkl, &jkl, &tmp, &posname);
       name = &line[posname];
-      if (name[0] == '/')
+      if (name[0] == '/' && strstr(name, ".so"))
         load_elf(name, trace, start);
       free(line);
     }

@@ -71,7 +71,7 @@ void		resolve_elf_dynamic_symbol(t_ftrace *trace, t_elf *elf,
   pltraddr = NULL;
   realocsym = NULL;
   if ((rela = find_section(elf, ".plt", 0, file)) != -1)
-    pltraddr = (void*)elf->sh_addr(elf->elf, rela, file);
+    pltraddr = (void*)elf->sh_addr(elf->elf, rela, file) + addroffset;
   i = -1;
   rawsym = elf_dyna_symb_tab(elf, file);
   if (((rela = find_section(elf, ".rela.plt", 0, file)) != -1) && rawsym)
@@ -85,7 +85,6 @@ void		resolve_elf_dynamic_symbol(t_ftrace *trace, t_elf *elf,
                                      pltraddr, elf)))
             {
               tmp->binary_name = strdup(file->name);
-              tmp->addr = tmp->addr + addroffset;
               trace->symbols_tab = (t_func**)add_ptr_t_tab(
                                      (void**)trace->symbols_tab, (void*)tmp);
             }
