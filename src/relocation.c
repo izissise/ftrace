@@ -32,6 +32,16 @@ int		relocation_info(void *rela, t_elf *elf)
           : ELF64_R_SYM(tmprel64->r_info));
 }
 
+int		relocation_addend(void *rela, t_elf *elf)
+{
+  Elf64_Rela	*tmprel64;
+  Elf32_Rela	*tmprel32;
+
+  tmprel64 = (Elf64_Rela*)rela;
+  tmprel32 = (Elf32_Rela*)rela;
+  return (IS_32(1, 0) ? tmprel32->r_addend : tmprel64->r_addend);
+}
+
 void		*relocation_addr(void *rela, t_elf *elf)
 {
   Elf64_Rela	*tmprel64;

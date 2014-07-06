@@ -47,7 +47,7 @@ t_func		*fill_tab_dyna_symbol(void *realocsym, char **rawsym,
   char		*name;
 
   rela = relocation_info(realocsym, elf) - 1;
-  addr = relocation_addr(realocsym, elf); /**(void*)((size_t)pltraddr + (rela * 0x10))*/
+  addr = (void*)((size_t)pltraddr + (rela * 0x10));
   name = rawsym[rela];
   printf("name: %s, addr: %p\n", name, addr);
   if ((tmp = malloc(sizeof(t_func))))
