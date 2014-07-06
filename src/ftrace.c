@@ -93,7 +93,9 @@ int		check_status(pid_t pid)
 void	trace_pid(t_ftrace *trace, t_elf *elf)
 {
   pid_t	pid;
+  size_t	i;
 
+  i = 0;
   pid = trace->pid;
   trace->systable = IS_32(1, 0) ? g_syscall_x86_x64 : g_syscall_x86;
   trace->sizetable = (IS_32(1, 0) ? sizeof(g_syscall_x86_x64)
@@ -103,5 +105,8 @@ void	trace_pid(t_ftrace *trace, t_elf *elf)
       if (!check_call(trace))
         if (ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL) == -1)
           perror("ptrace");
+      i++;
+      if (i == 92800)
+        load_libs_symbols(trace);
     }
 }

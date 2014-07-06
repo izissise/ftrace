@@ -103,7 +103,8 @@ int		load_elf(char *path, t_ftrace *trace, int64_t addroffset)
       || elf->check_elf_size(elf->elf, file))
     {
       free(elf);
-      close_file(file);
+      free(file->name);
+      free(file);
       return (1);
     }
   elf->elf = file->data;

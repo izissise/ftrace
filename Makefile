@@ -28,6 +28,7 @@ SRC		=	main.c \
 			section_spec32.c \
 			section_spec64.c \
 			strace.c \
+			get_next_line.c \
 			symbol32.c \
 			symbol64.c \
 			symbol_type32.c \

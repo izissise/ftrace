@@ -49,7 +49,6 @@ t_func		*fill_tab_dyna_symbol(void *realocsym, char **rawsym,
   rela = relocation_info(realocsym, elf) - 1;
   addr = (void*)((size_t)pltraddr + (rela * 0x10));
   name = rawsym[rela];
-  printf("name: %s, addr: %p\n", name, addr);
   if ((tmp = malloc(sizeof(t_func))))
     {
       tmp->addr = addr;
@@ -70,6 +69,7 @@ void		resolve_elf_dynamic_symbol(t_ftrace *trace, t_elf *elf,
   t_func		*tmp;
 
   pltraddr = NULL;
+  realocsym = NULL;
   if ((rela = find_section(elf, ".plt", 0, file)) != -1)
     pltraddr = (void*)elf->sh_addr(elf->elf, rela, file);
   i = -1;

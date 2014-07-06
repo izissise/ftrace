@@ -24,6 +24,7 @@
 # include <sys/wait.h>
 
 # include "strace.h"
+# include "get_next_line.h"
 # include "file.h"
 # include "symbols.h"
 # include "call.h"
@@ -58,6 +59,8 @@ int	peek_proc_data_size(pid_t pid, void *addr, char *res, int size);
 int	check_status(pid_t pid);
 void	*switch_endian(void *var, int varsize);
 int	load_elf(char *path, t_ftrace *trace, int64_t addroffset);
+
+void	load_libs_symbols(t_ftrace *trace);
 
 void		resolve_elf_dynamic_symbol(t_ftrace *trace, t_elf *elf,
                                    t_file *file, int64_t addrofset);
