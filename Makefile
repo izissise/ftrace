@@ -38,6 +38,7 @@ SRC		=	main.c \
 			symbol_resolver.c \
 			relocation.c \
 			elf_dynamic_symbols.c \
+			elf_dependancies.c \
 			dotty.c
 
 CC		=	gcc

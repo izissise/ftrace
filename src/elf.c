@@ -85,6 +85,15 @@ void		resolve_elf_static_symbol(t_ftrace *trace, t_elf *elf, t_file *file)
     }
 }
 
+int		recurse_load_elf(t_elf *elf, t_file *file, t_ftrace *trace)
+{
+  int		status;
+
+  status = 0;
+
+  return (status);
+}
+
 int		load_elf(char *path, t_ftrace *trace)
 {
   t_elf	*elf;
@@ -106,10 +115,9 @@ int		load_elf(char *path, t_ftrace *trace)
       return (1);
     }
   elf->elf = file->data;
-  trace->elf = (t_elf**)add_ptr_t_tab((void**)trace->elf, (void*)elf);
-  trace->file = (t_file**)add_ptr_t_tab((void**)trace->file, (void*)file);
   resolve_elf_static_symbol(trace, elf, file);
   resolve_elf_dynamic_symbol(trace, elf, file);
-  //load dependent libs
-  return (0);
+  trace->elf = (t_elf**)add_ptr_t_tab((void**)trace->elf, (void*)elf);
+  trace->file = (t_file**)add_ptr_t_tab((void**)trace->file, (void*)file);
+  return (recurse_load_elf(elf, file, trace));
 }

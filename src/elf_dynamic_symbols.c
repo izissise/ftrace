@@ -43,18 +43,19 @@ t_func		*fill_tab_dyna_symbol(void *realocsym, char **rawsym,
 {
   int		rela;
   t_func		*tmp;
+  void		*addr;
   char		*name;
 
-  rela = relocation_info(realocsym, elf);
+  rela = relocation_info(realocsym, elf) - 1;
+  addr = relocation_addr(realocsym, elf); /**(void*)((size_t)pltraddr + (rela * 0x10))*/
+  name = rawsym[rela];
+  printf("name: %s, addr: %p\n", name, addr);
   if ((tmp = malloc(sizeof(t_func))))
     {
-      name = rawsym[relocation_info(realocsym, elf)];
-      tmp->addr = (void*)((size_t)pltraddr + (rela * 0x10));
+      tmp->addr = addr;
       tmp->name = strdup(name ? name : "func");
-      // printf("name: %s, addr: %p\n", tmp->name, tmp->addr);
-      return (tmp);
     }
-  return (NULL);
+  return (tmp);
 }
 
 void		resolve_elf_dynamic_symbol(t_ftrace *trace,
@@ -77,9 +78,9 @@ void		resolve_elf_dynamic_symbol(t_ftrace *trace,
     {
       rawsize = ptr_tab_size((void**)rawsym);
       if ((realocsym = list_symbols(elf, rela, file, (IS_32(1, 0) ?
-                                    sizeof(Elf32_Rel) : sizeof(Elf64_Rel)))))
+                                    sizeof(Elf32_Rela) : sizeof(Elf64_Rela)))))
         while (realocsym[++i])
-          if ((rela = relocation_info(realocsym[i], elf)) < rawsize
+          if ((rela = relocation_info(realocsym[i], elf) - 1) < rawsize
               && rela >= 0 && (tmp = fill_tab_dyna_symbol(realocsym[i], rawsym,
                                      pltraddr, elf)))
             {
