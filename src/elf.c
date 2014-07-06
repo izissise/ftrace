@@ -56,7 +56,8 @@ int	init_elf(t_elf *elf, t_file *file)
   return (0);
 }
 
-void		resolve_elf_static_symbol(t_ftrace *trace, t_elf *elf, t_file *file)
+void		resolve_elf_static_symbol(t_ftrace *trace, t_elf *elf,
+                                  t_file *file, int64_t addroffset)
 {
   int		sym;
   char		*symstr;
@@ -73,7 +74,7 @@ void		resolve_elf_static_symbol(t_ftrace *trace, t_elf *elf, t_file *file)
                                  sizeof(Elf32_Sym) : sizeof(Elf64_Sym)))))
         while (rawsym[i] && ((tmp = malloc(sizeof(t_func))) != NULL))
           {
-            tmp->addr = elf->symbol_addr(rawsym[i], file);
+            tmp->addr = elf->symbol_addr(rawsym[i], file) + addroffset;
             tmp->binary_name = strdup(file->name);
             name = elf->symbol_name(rawsym[i], symstr, file);
             tmp->name = strdup(name ? name : "func");
@@ -85,7 +86,7 @@ void		resolve_elf_static_symbol(t_ftrace *trace, t_elf *elf, t_file *file)
     }
 }
 
-int		load_elf(char *path, t_ftrace *trace)
+int		load_elf(char *path, t_ftrace *trace, int64_t addroffset)
 {
   t_elf	*elf;
   t_file	*file;
@@ -106,8 +107,8 @@ int		load_elf(char *path, t_ftrace *trace)
       return (1);
     }
   elf->elf = file->data;
-  resolve_elf_static_symbol(trace, elf, file);
-  resolve_elf_dynamic_symbol(trace, elf, file);
+  resolve_elf_static_symbol(trace, elf, file, addroffset);
+  resolve_elf_dynamic_symbol(trace, elf, file, addroffset);
   trace->elf = (t_elf**)add_ptr_t_tab((void**)trace->elf, (void*)elf);
   trace->file = (t_file**)add_ptr_t_tab((void**)trace->file, (void*)file);
   return (0);

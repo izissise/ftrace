@@ -40,7 +40,7 @@ pid_t	ptrace_exec(char *program, char **av, char **envp, t_ftrace *trace)
         perror(program);
       exit(1);
     }
-  if (load_elf(path, trace))
+  if (load_elf(path, trace, 0x0))
     return (-1);
   free(path);
   trace->forked = 1;
@@ -64,7 +64,7 @@ pid_t	ptrace_attach(pid_t pid, t_ftrace *trace)
       return (-1);
     }
   snprintf(path, sizeof(path), "/proc/%lu/exe", (long int)pid);
-  if (load_elf(path, trace))
+  if (load_elf(path, trace, 0x0))
     return (-1);
   trace->forked = 0;
   return (pid);

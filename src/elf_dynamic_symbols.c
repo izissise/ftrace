@@ -58,8 +58,8 @@ t_func		*fill_tab_dyna_symbol(void *realocsym, char **rawsym,
   return (tmp);
 }
 
-void		resolve_elf_dynamic_symbol(t_ftrace *trace,
-                                   t_elf *elf, t_file *file)
+void		resolve_elf_dynamic_symbol(t_ftrace *trace, t_elf *elf,
+                                   t_file *file, int64_t addroffset)
 {
   int		rela;
   char		**rawsym;
@@ -85,6 +85,7 @@ void		resolve_elf_dynamic_symbol(t_ftrace *trace,
                                      pltraddr, elf)))
             {
               tmp->binary_name = strdup(file->name);
+              tmp->addr = tmp->addr + addroffset;
               trace->symbols_tab = (t_func**)add_ptr_t_tab(
                                      (void**)trace->symbols_tab, (void*)tmp);
             }
